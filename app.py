@@ -1,25 +1,18 @@
 from flask import Flask, render_template, request, redirect, url_for
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin, BaseView, expose
 from flask_admin.contrib.sqla import ModelView
+from models import db
+
 import os
 
 app = Flask(__name__)
-app.config.from_pyfile('config.py')
-
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///print_shop.db'
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
-
-class PaperType(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), nullable=False)
-    price_per_unit = db.Column(db.Float, nullable=False)
-
-
-class PrintType(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), nullable=False)
-    price_per_unit = db.Column(db.Float, nullable=False)
+from models import PrintType, PaperType
 
 
 def init_db():
@@ -78,7 +71,7 @@ def index():
 
 
 if __name__ == '__main__':
-    if not os.path.exists('print_shop.db'):
-        with app.app_context():
-            init_db()
+    # Создаем все таблицы, если они еще не созданы
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
