@@ -47,6 +47,11 @@ def index():
     return redirect('/admin')
 
 
+@app.route('/admin/')
+def admin_index():
+    return render_template('admin/index.html')
+
+
 if __name__ == '__main__':
     # Выполняем инициализацию базы данных при запуске приложения
     with app.app_context():

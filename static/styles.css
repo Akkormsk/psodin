@@ -1,23 +1,23 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 40px;
+.container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 100px;
 }
 
-h1 {
-    color: #333;
+.box {
+    width: 300px;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid black;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 24px;
+    cursor: pointer;
 }
 
-form {
-    margin-bottom: 20px;
-}
-
-label {
-    display: block;
-    margin: 5px 0;
-}
-
-input, select, button {
-    margin: 5px 0;
-    padding: 8px;
-    font-size: 16px;
+.box a {
+    text-decoration: none;
+    color: black;
 }

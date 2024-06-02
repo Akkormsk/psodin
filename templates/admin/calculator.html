@@ -1,30 +1,30 @@
 {% extends 'base.html' %}
 
-{% block body %}
-    <div class="container">
-        <h1>Print Shop Calculator</h1>
-        <form method="POST" action="{{ url_for('calculator.calculate') }}">
-            <label for="paper_type">Select Paper Type:</label>
-            <select name="paper_type" id="paper_type">
-                {% for paper in paper_types %}
-                    <option value="{{ paper.id }}">{{ paper.name }} - ${{ paper.price_per_unit }} per unit</option>
-                {% endfor %}
-            </select>
-            <br>
-            <label for="print_type">Select Print Type:</label>
-            <select name="print_type" id="print_type">
-                {% for print in print_types %}
-                    <option value="{{ print.id }}">{{ print.name }} - ${{ print.price_per_unit }} per unit</option>
-                {% endfor %}
-            </select>
-            <br>
-            <label for="quantity">Enter Quantity:</label>
-            <input type="number" name="quantity" id="quantity" min="1" required>
-            <br>
-            <button type="submit">Calculate</button>
-        </form>
-        {% if total_price %}
-            <h2>Сумма: {{ total_price }} руб.</h2>
-        {% endif %}
-    </div>
+{% block title %}Calculator{% endblock %}
+
+{% block content %}
+<h1>Калькулятор</h1>
+<form action="{{ url_for('calculator.calculate') }}" method="post">
+    <label for="paper_type">Тип бумаги:</label>
+    <select name="paper_type" id="paper_type">
+        {% for paper_type in paper_types %}
+            <option value="{{ paper_type.id }}">{{ paper_type.name }}</option>
+        {% endfor %}
+    </select>
+    <br>
+    <label for="print_type">Тип печати:</label>
+    <select name="print_type" id="print_type">
+        {% for print_type in print_types %}
+            <option value="{{ print_type.id }}">{{ print_type.name }}</option>
+        {% endfor %}
+    </select>
+    <br>
+    <label for="quantity">Количество:</label>
+    <input type="number" name="quantity" id="quantity">
+    <br>
+    <button type="submit">Рассчитать</button>
+</form>
+{% if total_price is not none %}
+    <h2>Итоговая цена: {{ total_price }} руб</h2>
+{% endif %}
 {% endblock %}
