@@ -12,12 +12,16 @@
     </header>
     <main>
         <div class="container">
-            <div class="box">
-                <a href="{{ url_for('calculator.index') }}">Калькулятор</a>
-            </div>
-            <div class="box">
-                Другое
-            </div>
+            <a href="{{ url_for('calculator.index') }}" class="box">
+                <div class="content">
+                    Калькулятор
+                </div>
+            </a>
+            <a href="#" class="box">
+                <div class="content">
+                    Другое
+                </div>
+            </a>
         </div>
     </main>
     <footer>
