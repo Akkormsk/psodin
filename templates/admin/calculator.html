@@ -2,6 +2,17 @@
 
 {% block title %}Calculator{% endblock %}
 
+{% block nav %}
+<nav>
+    <ul>
+        <li><a href="{{ url_for('admin_index') }}">Главная</a></li>
+        <li><a href="{{ url_for('paper_type.index_view') }}">Типы бумаги</a></li>
+        <li><a href="{{ url_for('print_type.index_view') }}">Типы печати</a></li>
+        <li><a href="{{ url_for('calculator.index') }}">Калькулятор</a></li>
+    </ul>
+</nav>
+{% endblock %}
+
 {% block content %}
 <h1>Калькулятор</h1>
 <form action="{{ url_for('calculator.calculate') }}" method="post">
@@ -26,5 +37,7 @@
 </form>
 {% if total_price is not none %}
     <h2>Итоговая цена: {{ total_price }} руб</h2>
+{% elif error_message is not none %}
+    <p style="color: red;">{{ error_message }}</p>
 {% endif %}
 {% endblock %}

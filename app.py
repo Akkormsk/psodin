@@ -13,8 +13,7 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 
-# Оставляем инициализацию административной панели
-
+# Views
 class CalculatorView(BaseView):
     @expose('/')
     def index(self):
@@ -26,14 +25,21 @@ class CalculatorView(BaseView):
     def calculate(self):
         paper_type_id = int(request.form['paper_type'])
         print_type_id = int(request.form['print_type'])
-        quantity = int(request.form['quantity'])
+        quantity = request.form['quantity']
+
+        if not quantity:
+            error_message = "Введите значение в поле количество"
+            paper_types = PaperType.query.all()
+            print_types = PrintType.query.all()
+            return self.render('admin/calculator.html', error_message=error_message, paper_types=paper_types, print_types=print_types)
+
+        quantity = int(quantity)
         paper_type = PaperType.query.get(paper_type_id)
         print_type = PrintType.query.get(print_type_id)
         total_price = round(quantity * (paper_type.price_per_unit + print_type.price_per_unit), 2)
         paper_types = PaperType.query.all()
         print_types = PrintType.query.all()
-        return self.render('admin/calculator.html', total_price=total_price, paper_types=paper_types,
-                           print_types=print_types)
+        return self.render('admin/calculator.html', total_price=total_price, paper_types=paper_types, print_types=print_types)
 
 
 admin = Admin(app, name='Print Shop Admin', template_mode='bootstrap3', base_template='base.html')
