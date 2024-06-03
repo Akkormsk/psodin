@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block nav %}
+<nav>
+    <ul>
+        <li><a href="{{ url_for('calculator.index') }}">Калькулятор</a></li>
+        <li><a href="{{ url_for('papertype.index_view') }}">Типы бумаги</a></li>
+        <li><a href="{{ url_for('printtype.index_view') }}">Типы печати</a></li>
+    </ul>
+</nav>
+{% endblock %}

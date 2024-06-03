@@ -1,66 +1,59 @@
-from flask import Flask, render_template, redirect, url_for, request
-from flask_migrate import Migrate
-from flask_admin import Admin, BaseView, expose
+from flask import Flask, render_template, request, redirect, url_for, flash
+from flask_admin import Admin, expose, BaseView
 from flask_admin.contrib.sqla import ModelView
-from models import db, init_db, PaperType, PrintType
-
-import os
+from models import db, PaperType, PrintType
 
 app = Flask(__name__)
-app.config.from_pyfile('config.py')
+app.config.from_object('config')
+
 db.init_app(app)
-migrate = Migrate(app, db)
+
+admin = Admin(app, name='PSadmin Panel', template_mode='bootstrap3')
+admin.add_view(ModelView(PaperType, db.session, name='Типы бумаги', endpoint='papertype'))
+admin.add_view(ModelView(PrintType, db.session, name='Типы печати', endpoint='printtype'))
 
 
-# Views
 class CalculatorView(BaseView):
     @expose('/')
     def index(self):
         paper_types = PaperType.query.all()
         print_types = PrintType.query.all()
-        return self.render('admin/calculator.html', paper_types=paper_types, print_types=print_types)
+        return self.render('calculator.html', paper_types=paper_types, print_types=print_types)
 
-    @expose('/calculate', methods=['POST'])
+    @expose('/calculate', methods=('POST',))
     def calculate(self):
-        paper_type_id = int(request.form['paper_type'])
-        print_type_id = int(request.form['print_type'])
-        quantity = request.form['quantity']
+        paper_type_id = request.form.get('paper_type')
+        print_type_id = request.form.get('print_type')
+        quantity = request.form.get('quantity')
 
         if not quantity:
-            error_message = "Введите значение в поле количество"
-            paper_types = PaperType.query.all()
-            print_types = PrintType.query.all()
-            return self.render('admin/calculator.html', error_message=error_message, paper_types=paper_types,
-                               print_types=print_types)
+            flash('Введите значение в поле количество', 'error')
+            return redirect(url_for('calculator.index'))
 
-        quantity = int(quantity)
         paper_type = PaperType.query.get(paper_type_id)
         print_type = PrintType.query.get(print_type_id)
-        total_price = round(quantity * (paper_type.price_per_unit + print_type.price_per_unit), 2)
-        paper_types = PaperType.query.all()
-        print_types = PrintType.query.all()
-        return self.render('admin/calculator.html', total_price=total_price, paper_types=paper_types,
-                           print_types=print_types)
+
+        if not paper_type or not print_type:
+            flash('Неверный выбор типа бумаги или печати', 'error')
+            return redirect(url_for('calculator.index'))
+
+        try:
+            quantity = int(quantity)
+        except ValueError:
+            flash('Количество должно быть числом', 'error')
+            return redirect(url_for('calculator.index'))
+
+        total_price = round((paper_type.price_per_unit + print_type.price_per_unit) * quantity, 2)
+        return self.render('calculator.html', paper_types=paper_types, print_types=print_types, total_price=total_price)
 
 
-# Initialize admin panel
-admin = Admin(app, name='Print Shop Admin', template_mode='bootstrap3')
-admin.add_view(ModelView(PaperType, db.session, endpoint='papertype'))
-admin.add_view(ModelView(PrintType, db.session, endpoint='printtype'))
-admin.add_view(CalculatorView(name='Calculator', endpoint='calculator'))
+admin.add_view(CalculatorView(name='Калькулятор', endpoint='calculator'))
 
 
 @app.route('/')
-def index():
-    return redirect('/admin')
-
-
-@app.route('/admin/')
 def admin_index():
-    return render_template('admin/index.html')
+    return render_template('index.html')
 
 
 if __name__ == '__main__':
-    with app.app_context():
-        init_db()
     app.run(debug=True)

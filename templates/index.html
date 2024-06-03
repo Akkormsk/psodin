@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="box">
+        <a href="{{ url_for('calculator.index') }}">
+            <div class="box-content">
+                <h2>Калькулятор</h2>
+            </div>
+        </a>
+    </div>
+        <div class="box">
+        <a href=#>
+            <div class="box-content">
+                <h2>Другое</h2>
+            </div>
+        </a>
+    </div>
+</div>
+{% endblock %}
