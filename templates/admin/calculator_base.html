@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block nav %}
-<ul class="navbar-nav">
+<ul class="navbar-nav ml-auto flex-row">
     <li class="nav-item"><a class="nav-link" href="{{ url_for('calculator') }}">Калькулятор</a></li>
     <li class="nav-item"><a class="nav-link" href="{{ url_for('papertype.index_view') }}">Типы бумаги</a></li>
     <li class="nav-item"><a class="nav-link" href="{{ url_for('printtype.index_view') }}">Типы печати</a></li>
