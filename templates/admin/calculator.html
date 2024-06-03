@@ -2,7 +2,7 @@
 
 {% block content %}
 <h2>Калькулятор стоимости печати</h2>
-<form method="POST" action="{{ url_for('calculator.calculate') }}">
+<form method="POST" action="{{ url_for('calculator') }}">
     <div class="form-group">
         <label for="paper_type">Тип бумаги:</label>
         <select class="form-control" id="paper_type" name="paper_type">
