@@ -44,7 +44,7 @@ class CalculatorView(BaseView):
             return redirect(url_for('calculator.index'))
 
         total_price = round((paper_type.price_per_unit + print_type.price_per_unit) * quantity, 2)
-        return self.render('calculator.html', paper_types=paper_types, print_types=print_types, total_price=total_price)
+        return self.render('calculator.html', paper_types=paper_type, print_types=print_type, total_price=total_price)
 
 
 admin.add_view(CalculatorView(name='Калькулятор', endpoint='calculator'))
