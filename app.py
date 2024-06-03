@@ -1,6 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, request
 from flask_migrate import Migrate
-from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin, BaseView, expose
 from flask_admin.contrib.sqla import ModelView
 from models import db, init_db, PaperType, PrintType
