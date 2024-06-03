@@ -8,25 +8,30 @@ app = Flask(__name__)
 app.config.from_object('config')
 db.init_app(app)
 
+
 class MyAdminIndexView(AdminIndexView):
     @expose('/')
     def index(self):
         return self.render('admin/index.html')
 
+
 class MyModelView(ModelView):
     def is_accessible(self):
         return True  # Добавьте вашу логику проверки доступа здесь, если необходимо
 
+
 admin = Admin(app, index_view=MyAdminIndexView(), template_mode='bootstrap3')
 admin.add_view(MyModelView(PaperType, db.session, endpoint='papertype'))
 admin.add_view(MyModelView(PrintType, db.session, endpoint='printtype'))
+
 
 @app.route('/')
 @app.route('/home')
 def index():
     return render_template('index.html')
 
-@app.route('/admin/calculator/', methods=['GET', 'POST'])
+
+@app.route('/calculator/', methods=['GET', 'POST'])
 def calculator():
     paper_types = PaperType.query.all()
     print_types = PrintType.query.all()
@@ -41,7 +46,9 @@ def calculator():
         paper_type = PaperType.query.get(paper_type_id)
         print_type = PrintType.query.get(print_type_id)
         total_cost = round((paper_type.price_per_unit + print_type.price_per_unit) * quantity, 2)
-    return render_template('admin/calculator.html', paper_types=paper_types, print_types=print_types, total_cost=total_cost)
+    return render_template('admin/calculator.html', paper_types=paper_types, print_types=print_types,
+                           total_cost=total_cost)
+
 
 if __name__ == '__main__':
     with app.app_context():
