@@ -3,27 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}PSadmin Panel{% endblock %}</title>
+    <title>PSadmin Panel</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<header>
-    <div class="header-left">
-        <h1><a href="{{ url_for('admin_index') }}">PSadmin panel</a></h1>
-    </div>
-    <div class="header-right">
-        {% block nav %}
-        <!-- Навигация будет добавляться здесь в подшаблонах -->
-        {% endblock %}
-    </div>
-</header>
-<main>
-    {% block content %}
-    <!-- Содержимое страницы -->
-    {% endblock %}
-</main>
-<footer>
-    <p>&copy; 2024 PSadmin Panel</p>
-</footer>
+    <header class="navbar navbar-dark bg-dark">
+        <a href="{{ url_for('index') }}" class="navbar-brand">PSadmin Panel</a>
+        {% block nav %}{% endblock %}
+    </header>
+    <main role="main" class="container mt-3">
+        {% block content %}{% endblock %}
+    </main>
 </body>
 </html>

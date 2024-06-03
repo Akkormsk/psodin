@@ -114,3 +114,16 @@ footer {
     width: 100%;
     bottom: 0;
 }
+
+.card {
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.card:hover {
+    background-color: #f0f8ff;
+}
+
+.card:active {
+    transform: scale(0.98);
+}
