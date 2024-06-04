@@ -2,5 +2,24 @@
 
 {% block calculator_content %}
 <h2>Типы бумаги</h2>
-<!-- Add your table or form for managing paper types here -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Цена за единицу</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for papertype in papertypes %}
+        <tr>
+            <td>{{ papertype.id }}</td>
+            <td>{{ papertype.name }}</td>
+            <td>{{ papertype.description }}</td>
+            <td>{{ papertype.price_per_unit }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}

@@ -1,28 +1,19 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_sqlalchemy import SQLAlchemy
-from flask_admin import Admin, AdminIndexView, expose
+from flask_migrate import Migrate
+from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
+from config import Config
 from models import db, PaperType, PrintType
 
 app = Flask(__name__)
-app.config.from_object('config')
+app.config.from_object(Config)
 db.init_app(app)
+migrate = Migrate(app, db)
 
-
-class MyAdminIndexView(AdminIndexView):
-    @expose('/')
-    def index(self):
-        return self.render('admin/index.html')
-
-
-class MyModelView(ModelView):
-    def is_accessible(self):
-        return True  # Добавьте вашу логику проверки доступа здесь, если необходимо
-
-
-admin = Admin(app, index_view=MyAdminIndexView(), template_mode='bootstrap3')
-admin.add_view(MyModelView(PaperType, db.session, endpoint='papertype'))
-admin.add_view(MyModelView(PrintType, db.session, endpoint='printtype'))
+admin = Admin(app, name='PSadmin Panel', template_mode='bootstrap3')
+admin.add_view(ModelView(PaperType, db.session))
+admin.add_view(ModelView(PrintType, db.session))
 
 
 @app.route('/')
