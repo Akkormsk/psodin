@@ -1,19 +1,29 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
-from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_admin import Admin
-from flask_admin.contrib.sqla import ModelView
 from config import Config
 from models import db, PaperType, PrintType
+from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user, login_required
+from admin import create_admin
 
 app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
 migrate = Migrate(app, db)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
 
-admin = Admin(app, name='PSadmin Panel', template_mode='bootstrap3')
-admin.add_view(ModelView(PaperType, db.session))
-admin.add_view(ModelView(PrintType, db.session))
+
+class User(UserMixin):
+    id = 1  # Поскольку мы не используем базу данных для пользователей
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User()
+
+
+admin = create_admin(app)
 
 
 @app.route('/')
@@ -37,8 +47,27 @@ def calculator():
         paper_type = PaperType.query.get(paper_type_id)
         print_type = PrintType.query.get(print_type_id)
         total_cost = round((paper_type.price_per_unit + print_type.price_per_unit) * quantity, 2)
-    return render_template('admin/calculator.html', paper_types=paper_types, print_types=print_types,
-                           total_cost=total_cost)
+    return render_template('calculator.html', paper_types=paper_types, print_types=print_types, total_cost=total_cost)
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        password = request.form['password']
+        if password == Config.SECRET_ADMIN_PASSWORD:
+            user = User()
+            login_user(user)
+            next_page = request.args.get('next')
+            return redirect(next_page or url_for('admin.index'))
+        flash('Неверный пароль')
+    return render_template('login.html')
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':

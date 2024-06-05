@@ -1,11 +1,31 @@
-{% extends 'base.html' %}
+{% extends 'layout.html' %}
 
 {% block content %}
-<h1>Добро пожаловать в PSADMIN</h1>
-<p>Пожалуйста, выберите одно из подприложений:</p>
-<ul>
-    <li><a href="{{ url_for('calculator') }}">Калькулятор</a></li>
-    <li><a href="#">Касса (заглушка)</a></li>
-    <li><a href="#">Учет (заглушка)</a></li>
-</ul>
+<h1>Добро пожаловать в PSadmin Panel</h1>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Калькулятор</h5>
+                <a href="{{ url_for('calculator') }}" class="btn btn-primary">Перейти</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Касса</h5>
+                <a href="#" class="btn btn-secondary">Перейти</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Учет</h5>
+                <a href="#" class="btn btn-secondary">Перейти</a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
