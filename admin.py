@@ -26,8 +26,12 @@ class MyAdminIndexView(AdminIndexView):
         return redirect(url_for('login', next=request.url))
 
 
+class CustomModelView(ModelView):
+    list_template = 'admin/model_list.html'  # Используем пользовательский шаблон
+
+
 def create_admin(app):
-    admin = Admin(app, name="PS#1 admin", index_view=MyAdminIndexView(), template_mode='bootstrap4')
-    admin.add_view(MyModelView(PaperType, db.session, endpoint='papertype'))
-    admin.add_view(MyModelView(PrintType, db.session, endpoint='printtype'))
+    admin = Admin(app, name="PS#1 admin", index_view=MyAdminIndexView(name='Главная'), template_mode='bootstrap3')
+    admin.add_view(CustomModelView(PaperType, db.session, endpoint='papertype'))
+    admin.add_view(CustomModelView(PrintType, db.session, endpoint='printtype'))
     return admin
