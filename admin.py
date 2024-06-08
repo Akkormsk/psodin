@@ -27,7 +27,7 @@ class MyAdminIndexView(AdminIndexView):
 
 
 def create_admin(app):
-    admin = Admin(app, name="PSadmin", index_view=MyAdminIndexView(), template_mode='bootstrap3')
+    admin = Admin(app, name="PS#1 admin", index_view=MyAdminIndexView(), base_template='admin/admin_base.html', template_mode='bootstrap3')
     admin.add_view(MyModelView(PaperType, db.session, endpoint='papertype'))
     admin.add_view(MyModelView(PrintType, db.session, endpoint='printtype'))
     return admin

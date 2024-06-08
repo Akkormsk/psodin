@@ -1,0 +1,16 @@
+{% extends 'admin/admin_custom.html' %}
+
+
+
+{% block branding %}
+    <a class="navbar-brand" href="{{ admin_index_url }}">PSADMIN</a>
+{% endblock %}
+
+
+
+{% block menu_links %}
+    <ul class="nav navbar-nav navbar-right">
+        <!-- Custom Navigation links without Home button -->
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Выйти</a></li>
+    </ul>
+{% endblock %}
