@@ -1,12 +1,24 @@
-{% extends 'admin/master.html' %}
+{% extends 'admin/base.html' %}
+
 
 {% block body %}
-<h1>Hello!</h1>
-{% endblock %}
-
-{% block menu_links %}
-    <ul class="nav navbar-nav navbar-right">
-        <!-- Custom Navigation links without Home button -->
-        <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Выйти</a></li>
+<div class="container">
+    <h1>Инструменты</h1>
+    <h3>Калькулятор</h3>
+    <ul>
+        <li><a href="{{ url_for('papertype.index_view') }}">Типы бумаги</a></li>
+        <li><a href="{{ url_for('printtype.index_view') }}">Типы печати</a></li>
     </ul>
+    <h3>Касса</h3>
+    <ul>
+        <!-- Будущие таблицы для Кассы -->
+    </ul>
+    <h3>Учет</h3>
+    <ul>
+        <!-- Будущие таблицы для Учета -->
+    </ul>
+</div>
+<div class="container">
+    <a href="{{ url_for('logout') }}" class="btn btn-primary">Выйти</a>
+</div>
 {% endblock %}
