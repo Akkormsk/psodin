@@ -5,18 +5,17 @@ db = SQLAlchemy()
 
 class PaperType(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), unique=True, nullable=False)
-    price_per_unit = db.Column(db.Float)
-
-    def __repr__(self):
-        return f'<PaperType {self.name}>'
+    name = db.Column(db.String(100), nullable=False)
+    price_per_unit = db.Column(db.Float, nullable=False)
 
 
 class PrintType(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), unique=True, nullable=False)
-    price_per_unit = db.Column(db.Float)
+    name = db.Column(db.String(100), nullable=False)
+    price_per_unit = db.Column(db.Float, nullable=False)
 
-    def __repr__(self):
-        return f'<PrintType {self.name}>'
 
+class PostPrintProcessing(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    price_per_unit = db.Column(db.Float, nullable=False)
