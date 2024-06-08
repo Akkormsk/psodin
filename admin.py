@@ -3,7 +3,7 @@ from flask_admin import Admin, AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user, login_required
 
-from models import db, PaperType, PrintType, PostPrintProcessing
+from models import *
 
 
 class MyModelView(ModelView):
@@ -29,6 +29,7 @@ class MyAdminIndexView(AdminIndexView):
 class CustomModelView(ModelView):
     def is_accessible(self):
         return current_user.is_authenticated
+
     # Отключаем отображение в меню
     def is_visible(self):
         return False
@@ -36,8 +37,14 @@ class CustomModelView(ModelView):
 
 def create_admin(app):
     admin = Admin(app, name="PS#1 admin", index_view=MyAdminIndexView(name='Главная'), template_mode='bootstrap4')
-    admin.add_view(CustomModelView(PaperType, db.session, endpoint='papertype'))
-    admin.add_view(CustomModelView(PrintType, db.session, endpoint='printtype'))
-    admin.add_view(CustomModelView(PostPrintProcessing, db.session, name='Постпечатная обработка',
+    admin.add_view(CustomModelView(PaperType, db.session, name='Бумага', endpoint='papertype'))
+    admin.add_view(CustomModelView(PrintType, db.session, name='Печать', endpoint='printtype'))
+    admin.add_view(CustomModelView(PostPrintProcessing, db.session, name='Постпечатка',
                                    endpoint='postprintprocessing'))
+    admin.add_view(CustomModelView(Embossing, db.session, name='Тиснение', endpoint='embossing'))
+    admin.add_view(CustomModelView(Variables, db.session, name='Переменные', endpoint='variables'))
+    admin.add_view(CustomModelView(PaperTypeLarge, db.session, name='Бумага шир', endpoint='papertypelarge'))
+    admin.add_view(CustomModelView(PrintTypeLarge, db.session, name='Печать шир', endpoint='printtypelarge'))
+    admin.add_view(CustomModelView(PostPrintProcessingLarge, db.session, name='Постпечатка шир',
+                                   endpoint='postprintprocessinglarge'))
     return admin
