@@ -49,7 +49,23 @@ def calculator():
         paper_type = PaperType.query.get(paper_type_id)
         print_type = PrintType.query.get(print_type_id)
         total_cost = round((paper_type.price_per_unit + print_type.price_per_unit) * quantity, 2)
-    return render_template('calculator.html', paper_types=paper_types, print_types=print_types, total_cost=total_cost)
+    return render_template('Calculator/calculator.html', paper_types=paper_types, print_types=print_types,
+                           total_cost=total_cost)
+
+
+@app.route('/sheet_printing')
+def sheet_printing():
+    return render_template('Calculator/sheet_printing.html')
+
+
+@app.route('/multi_page_printing')
+def multi_page_printing():
+    return render_template('Calculator/multi_page_printing.html')
+
+
+@app.route('/wide_format_printing')
+def wide_format_printing():
+    return render_template('Calculator/wide_format_printing.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])

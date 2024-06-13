@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block nav_content %}
+<ul class="navbar-nav">
+    <li class="nav-item {% if request.path == url_for('sheet_printing') or request.path == url_for('calculator') %}active{% endif %}">
+        <a class="nav-link" href="{{ url_for('sheet_printing') }}">Листовая печать</a>
+    </li>
+    <li class="nav-item {% if request.path == url_for('multi_page_printing') %}active{% endif %}">
+        <a class="nav-link" href="{{ url_for('multi_page_printing') }}">Многостраничная печать</a>
+    </li>
+    <li class="nav-item {% if request.path == url_for('wide_format_printing') %}active{% endif %}">
+        <a class="nav-link" href="{{ url_for('wide_format_printing') }}">Широкоформатная печать</a>
+    </li>
+</ul>
+{% endblock %}
+
+{% block content %}
+<div id="content">
+    {% include 'Calculator/sheet_printing.html' %}
+
+</div>
+{% endblock %}

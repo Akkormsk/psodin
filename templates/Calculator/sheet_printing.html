@@ -1,7 +1,5 @@
-{% extends 'layout.html' %}
-
 {% block content %}
-<h2>Калькулятор стоимости печати</h2>
+<h2>Листовая печать</h2>
 <form method="POST" action="{{ url_for('calculator') }}">
     <div class="form-group">
         <label for="paper_type">Тип бумаги:</label>
@@ -29,3 +27,4 @@
 <p class="mt-3">Общая стоимость: {{ total_cost }} руб.</p>
 {% endif %}
 {% endblock %}
+
