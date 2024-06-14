@@ -15,8 +15,13 @@
 {% endblock %}
 
 {% block content %}
-<div id="content">
-    {% include 'Calculator/sheet_printing.html' %}
-
-</div>
+<!--<div id="content">-->
+<!--       {% if request.path == url_for('sheet_printing') or request.path == url_for('calculator') %}-->
+<!--        {% include 'calculator/sheet_printing.html' %}-->
+<!--    {% elif request.path == url_for('multi_page_printing') %}-->
+<!--        {% include 'calculator/multi_page_printing.html' %}-->
+<!--    {% elif request.path == url_for('wide_format_printing') %}-->
+<!--        {% include 'calculator/wide_format_printing.html' %}-->
+<!--    {% endif %}-->
+<!--</div>-->
 {% endblock %}
