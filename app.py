@@ -34,8 +34,11 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/calculator/', methods=['GET', 'POST'])
-def calculator():
+@app.route('/calculator/sheet_printing', methods=['GET', 'POST'])
+@app.route('/sheet_printing', methods=['GET', 'POST'])
+# @app.route('/calculator/', methods=['GET', 'POST'])
+# def calculator():
+def sheet_printing():
     paper_types = PaperType.query.all()
     print_types = PrintType.query.all()
     postprint_types = PostPrintProcessing.query.all()
@@ -53,31 +56,35 @@ def calculator():
     # return render_template('Calculator/calculator.html', paper_types=paper_types, print_types=print_types,
     #                        total_cost=total_cost)
     if request.method == 'POST':
-        paper_id = int(request.form['paper_type'])
-        print_id = int(request.form['print_type'])
-        postprint_id = int(request.form['postprint_type'])
-        paper_qty = int(request.form['paper_quantity'])
-        print_qty = int(request.form['print_quantity'])
-        postprint_qty = int(request.form['postprint_quantity'])
-        if not paper_qty or paper_qty or print_qty:
+        paper_type_id = request.form['paper_type']
+        paper_quantity = request.form['paper_quantity']
+        print_type_id = request.form['print_type']
+        print_quantity = request.form['print_quantity']
+        postprint_type_id = request.form['postprint_type']
+        postprint_quantity = request.form['postprint_quantity']
+        if not paper_quantity or not print_quantity or not postprint_quantity:
             flash("Введите значение в поле количество", "warning")
             return redirect(url_for('calculator'))
-        paper_type = PaperType.query.get(paper_id)
-        print_type = PrintType.query.get(print_id)
-        postprint_type = PostPrintProcessing.query.get(postprint_id)
+        paper_type = PaperType.query.get(paper_type_id)
+        print_type = PrintType.query.get(print_type_id)
+        postprint_type = PostPrintProcessing.query.get(postprint_type_id)
 
-        total_cost = (paper_type.price_per_unit * paper_qty) + \
-                     (print_type.price_per_unit * print_qty) + \
-                     (postprint_type.price_per_unit * postprint_qty)
+        total_cost = (paper_type.price_per_unit * int(paper_quantity) +
+                      print_type.price_per_unit * int(print_quantity) +
+                      postprint_type.price_per_unit * int(postprint_quantity))
 
-    return render_template('calculator/sheet_printing.html', paper_types=paper_types,
+    return render_template('Calculator/sheet_printing.html', paper_types=paper_types,
                            print_types=print_types, postprint_types=postprint_types,
                            total_cost=total_cost)
 
 
-@app.route('/sheet_printing')
-def sheet_printing():
-    return render_template('Calculator/sheet_printing.html')
+# @app.route('/sheet_printing')
+# def sheet_printing():
+#     return render_template('Calculator/sheet_printing.html')
+
+@app.route('/calculator')
+def calculator():
+    return redirect(url_for('sheet_printing'))
 
 
 @app.route('/multi_page_printing')
