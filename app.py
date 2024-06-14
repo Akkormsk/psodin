@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_migrate import Migrate
 from config import Config
-from models import db, PaperType, PrintType
+from models import *
 from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user, login_required
 from admin import create_admin
 from flask_session import Session
@@ -38,18 +38,40 @@ def index():
 def calculator():
     paper_types = PaperType.query.all()
     print_types = PrintType.query.all()
+    postprint_types = PostPrintProcessing.query.all()
     total_cost = None
+    # if request.method == 'POST':
+    #     paper_type_id = request.form['paper_type']
+    #     print_type_id = request.form['print_type']
+    #     quantity = request.form.get('quantity', type=int)
+    #     if not quantity:
+    #         flash("Введите значение в поле количество", "warning")
+    #         return redirect(url_for('calculator'))
+    #     paper_type = PaperType.query.get(paper_type_id)
+    #     print_type = PrintType.query.get(print_type_id)
+    #     total_cost = round((paper_type.price_per_unit + print_type.price_per_unit) * quantity, 2)
+    # return render_template('Calculator/calculator.html', paper_types=paper_types, print_types=print_types,
+    #                        total_cost=total_cost)
     if request.method == 'POST':
-        paper_type_id = request.form['paper_type']
-        print_type_id = request.form['print_type']
-        quantity = request.form.get('quantity', type=int)
-        if not quantity:
+        paper_id = int(request.form['paper_type'])
+        print_id = int(request.form['print_type'])
+        postprint_id = int(request.form['postprint_type'])
+        paper_qty = int(request.form['paper_quantity'])
+        print_qty = int(request.form['print_quantity'])
+        postprint_qty = int(request.form['postprint_quantity'])
+        if not paper_qty or paper_qty or print_qty:
             flash("Введите значение в поле количество", "warning")
             return redirect(url_for('calculator'))
-        paper_type = PaperType.query.get(paper_type_id)
-        print_type = PrintType.query.get(print_type_id)
-        total_cost = round((paper_type.price_per_unit + print_type.price_per_unit) * quantity, 2)
-    return render_template('Calculator/calculator.html', paper_types=paper_types, print_types=print_types,
+        paper_type = PaperType.query.get(paper_id)
+        print_type = PrintType.query.get(print_id)
+        postprint_type = PostPrintProcessing.query.get(postprint_id)
+
+        total_cost = (paper_type.price_per_unit * paper_qty) + \
+                     (print_type.price_per_unit * print_qty) + \
+                     (postprint_type.price_per_unit * postprint_qty)
+
+    return render_template('calculator/sheet_printing.html', paper_types=paper_types,
+                           print_types=print_types, postprint_types=postprint_types,
                            total_cost=total_cost)
 
 
