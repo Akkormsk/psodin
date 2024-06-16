@@ -36,51 +36,70 @@ def index():
 
 @app.route('/calculator/sheet_printing', methods=['GET', 'POST'])
 @app.route('/sheet_printing', methods=['GET', 'POST'])
-# @app.route('/calculator/', methods=['GET', 'POST'])
-# def calculator():
 def sheet_printing():
-    paper_types = PaperType.query.all()
-    print_types = PrintType.query.all()
-    postprint_types = PostPrintProcessing.query.all()
-    total_cost = None
-    # if request.method == 'POST':
-    #     paper_type_id = request.form['paper_type']
-    #     print_type_id = request.form['print_type']
-    #     quantity = request.form.get('quantity', type=int)
-    #     if not quantity:
-    #         flash("Введите значение в поле количество", "warning")
-    #         return redirect(url_for('calculator'))
-    #     paper_type = PaperType.query.get(paper_type_id)
-    #     print_type = PrintType.query.get(print_type_id)
-    #     total_cost = round((paper_type.price_per_unit + print_type.price_per_unit) * quantity, 2)
-    # return render_template('Calculator/calculator.html', paper_types=paper_types, print_types=print_types,
-    #                        total_cost=total_cost)
     if request.method == 'POST':
         paper_type_id = request.form['paper_type']
-        paper_quantity = request.form['paper_quantity']
+        paper_quantity = int(request.form.get('paper_quantity', ''))
         print_type_id = request.form['print_type']
-        print_quantity = request.form['print_quantity']
+        print_quantity = int(request.form.get('print_quantity', ''))
         postprint_type_id = request.form['postprint_type']
-        postprint_quantity = request.form['postprint_quantity']
-        if not paper_quantity or not print_quantity or not postprint_quantity:
-            flash("Введите значение в поле количество", "warning")
-            return redirect(url_for('calculator'))
+        postprint_quantity = int(request.form.get('postprint_quantity', ''))
+        work_time = float(request.form['work_time'])
+
         paper_type = PaperType.query.get(paper_type_id)
         print_type = PrintType.query.get(print_type_id)
         postprint_type = PostPrintProcessing.query.get(postprint_type_id)
 
-        total_cost = (paper_type.price_per_unit * int(paper_quantity) +
-                      print_type.price_per_unit * int(print_quantity) +
-                      postprint_type.price_per_unit * int(postprint_quantity))
+        machine_type = request.form['machine_type']
+        if machine_type == 'xerox':
+            print_cost = print_quantity * print_type.price_per_unit_xerox
+        else:
+            print_cost = print_quantity * print_type.price_per_unit_konica
 
-    return render_template('Calculator/sheet_printing.html', paper_types=paper_types,
-                           print_types=print_types, postprint_types=postprint_types,
-                           total_cost=total_cost)
+        paper_cost = paper_quantity * paper_type.price_per_unit
+        postprint_cost = postprint_quantity * postprint_type.price_per_unit
+        work = Variables.query.get(1)
+        margin_ratio = Variables.query.get(2)
+        regulars_discount = Variables.query.get(5)
+        partners_discount = Variables.query.get(6)
+        urgency = Variables.query.get(7)
+
+        if work:
+            work_cost = work_time * work.value
+        else:
+            work_cost = 0
+
+        total_cost = paper_cost + print_cost + postprint_cost + work_cost
+        retail_price = total_cost * margin_ratio.value
+        regulars_price = retail_price * regulars_discount.value
+        partners_price = retail_price * partners_discount.value
+        urgent_price = retail_price * urgency.value
+
+        return render_template('Calculator/sheet_printing.html', total_cost=total_cost,
+                               paper_type=paper_type, paper_quantity=paper_quantity,
+                               print_type=print_type, print_quantity=print_quantity,
+                               postprint_type=postprint_type, postprint_quantity=postprint_quantity,
+                               work_time=work_time,
+                               paper_types=PaperType.query.all(),
+                               print_types=PrintType.query.all(),
+                               postprint_types=PostPrintProcessing.query.all(),
+                               work=work.value, print_cost=print_cost, retail_price=retail_price,
+                               regulars_price=regulars_price, partners_price=partners_price, urgent_price=urgent_price)
+
+    return render_template('Calculator/sheet_printing.html',
+                           paper_types=PaperType.query.all(),
+                           print_types=PrintType.query.all(),
+                           postprint_types=PostPrintProcessing.query.all())
 
 
-# @app.route('/sheet_printing')
-# def sheet_printing():
-#     return render_template('Calculator/sheet_printing.html')
+@app.route('/update_print_options')
+def update_print_options():
+    machine_type = request.args.get('machine_type')
+    if machine_type == 'xerox':
+        return render_template('Calculator/sheet_printing_xerox.html', print_types=PrintType.query.all())
+    elif machine_type == 'konica':
+        return render_template('Calculator/sheet_printing_konica.html', print_types=PrintType.query.all())
+
 
 @app.route('/calculator')
 def calculator():

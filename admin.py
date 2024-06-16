@@ -30,6 +30,8 @@ class CustomModelView(ModelView):
     def is_accessible(self):
         return current_user.is_authenticated
 
+    column_display_pk = True  # Показывать первичный ключ
+
     # Отключаем отображение в меню
     def is_visible(self):
         return False

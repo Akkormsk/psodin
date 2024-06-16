@@ -1,70 +1,97 @@
 {% extends 'Calculator/calculator.html' %}
 
 {% block content %}
-<!--<h2>Листовая печать тест</h2>-->
-<!--<form method="POST" action="{{ url_for('calculator') }}">-->
-<!--    <div class="form-group">-->
-<!--        <label for="paper_type">Тип бумаги:</label>-->
-<!--        <select class="form-control" id="paper_type" name="paper_type">-->
-<!--            {% for paper in paper_types %}-->
-<!--            <option value="{{ paper.id }}">{{ paper.name }}</option>-->
-<!--            {% endfor %}-->
-<!--        </select>-->
-<!--    </div>-->
-<!--    <div class="form-group">-->
-<!--        <label for="print_type">Тип печати:</label>-->
-<!--        <select class="form-control" id="print_type" name="print_type">-->
-<!--            {% for print in print_types %}-->
-<!--            <option value="{{ print.id }}">{{ print.name }}</option>-->
-<!--            {% endfor %}-->
-<!--        </select>-->
-<!--    </div>-->
-<!--    <div class="form-group">-->
-<!--        <label for="quantity">Количество:</label>-->
-<!--        <input type="number" class="form-control" id="quantity" name="quantity" required>-->
-<!--    </div>-->
-<!--    <button type="submit" class="btn btn-primary">Рассчитать</button>-->
-<!--</form>-->
-<!--{% if total_cost %}-->
-<!--<p class="mt-3">Общая стоимость: {{ total_cost }} руб.</p>-->
-<!--{% endif %}-->
-
-<h2>Листовая печать</h2>
 <form method="POST">
+    <h2>Листовая печать</h2>
     <div class="form-group">
         <label for="paper_type">Выберите тип бумаги:</label>
-        <select class="form-control" id="paper_type" name="paper_type">
-            {% for paper in paper_types %}
-            <option value="{{ paper.id }}">{{ paper.name }} - {{ paper.price_per_unit }} руб/лист</option>
-            {% endfor %}
-        </select>
-        <input type="number" class="form-control mt-2" id="paper_quantity" name="paper_quantity" placeholder="Количество листов" required>
+        <div class="d-flex align-items-center">
+            <select class="form-control flex-grow-1 mr-2" id="paper_type" name="paper_type">
+                {% for paper in paper_types %}
+                <option value="{{ paper.id }}">{{ paper.name }} - {{ paper.price_per_unit }} руб/лист</option>
+                {% endfor %}
+            </select>
+            <input type="number" class="form-control" id="paper_quantity" name="paper_quantity" placeholder="Количество"
+                   style="width: 20%;" required value="{{ paper_quantity }}">
+        </div>
     </div>
-    <div class="form-group">
-        <label for="print_type">Выберите тип печати:</label>
-        <select class="form-control" id="print_type" name="print_type">
-            {% for print in print_types %}
-            <option value="{{ print.id }}">{{ print.name }} - {{ print.price_per_unit }} руб/лист</option>
-            {% endfor %}
-        </select>
-        <input type="number" class="form-control mt-2" id="print_quantity" name="print_quantity" placeholder="Количество страниц" required>
+    <div>
+        <label>Выберите машину для печати:</label>
+        <div>
+            <input type="radio" id="xerox" name="machine_type" value="xerox" checked
+                   onclick="updatePrintOptions('xerox')">
+            <label for="xerox">Xerox</label>
+        </div>
+        <div>
+            <input type="radio" id="konica" name="machine_type" value="konica" onclick="updatePrintOptions('konica')">
+            <label for="konica">Konica</label>
+        </div>
+
     </div>
+    <div id="print-content">
+        {% include 'Calculator/sheet_printing_xerox.html' %}
+    </div>
+
     <div class="form-group">
         <label for="postprint_type">Выберите тип постпечатной обработки:</label>
-        <select class="form-control" id="postprint_type" name="postprint_type">
-            {% for postprint in postprint_types %}
-            <option value="{{ postprint.id }}">{{ postprint.name }} - {{ postprint.price_per_unit }} руб/единица</option>
-            {% endfor %}
-        </select>
-        <input type="number" class="form-control mt-2" id="postprint_quantity" name="postprint_quantity" placeholder="Количество единиц" required>
+        <div class="d-flex align-items-center">
+            <select class="form-control flex-grow-1 mr-2" id="postprint_type" name="postprint_type">
+                {% for postprint in postprint_types %}
+                <option value="{{ postprint.id }}">{{ postprint.name }} - {{ postprint.price_per_unit }} руб/единица
+                </option>
+                {% endfor %}
+            </select>
+            <input type="number" class="form-control" id="postprint_quantity" name="postprint_quantity"
+                   placeholder="Количество" style="width: 20%;" required value="{{ postprint_quantity }}">
+        </div>
     </div>
+    <div class="form-group">
+        <label for="work_time">Время работы (часы):</label>
+        <input type="number" class="form-control" id="work_time" name="work_time" placeholder="Количество"
+               style="width: 20%;" required step="0.5" min="0" value="{{ work_time }}">
+    </div>
+
+
     <button type="submit" class="btn btn-primary">Рассчитать</button>
 </form>
 
-{% if total_cost is not none %}
-<div class="alert alert-info mt-3">
-    Общая стоимость: {{ total_cost }} руб.
+{% if total_cost %}
+<div class="mt-4 p-3 bg-custom-light">
+    <h3>Розничная цена: {{ retail_price }} руб</h3>
+    <ul>
+        <li>Цена для постоянников: {{ regulars_price }} руб</li>
+        <li>Цена для партнёров: {{ partners_price }} руб</li>
+        <li>Цена со срочностью: {{ urgent_price }} руб</li>
+    </ul>
+    <h5>Закупочная стоимость: {{ total_cost }} руб</h5>
+    <ul>
+        <li>Тип бумаги: {{ paper_type.name }}, количество: {{ paper_quantity }} по цене {{ paper_type.price_per_unit
+            }}
+        </li>
+        <li>Тип печати: {{ print_type.name }}, количество: {{ print_quantity }} по цене {{ print_cost }}
+        </li>
+        <li>Тип постпечатной обработки: {{ postprint_type.name }}, количество: {{ postprint_quantity }} по цене {{
+            postprint_type.price_per_unit }}
+        </li>
+        <li>{{ work_time }} часов работы по цене {{ work }}</li>
+    </ul>
 </div>
 {% endif %}
-{% endblock %}
+<script>
+    function updatePrintOptions(machineType) {
+        fetch(`/update_print_options?machine_type=${machineType}`)
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('print-content').innerHTML = html;
+            });
+    }
 
+
+
+
+
+
+
+</script>
+
+{% endblock %}

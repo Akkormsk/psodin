@@ -9,3 +9,19 @@
 .card:active {
     transform: scale(0.98);
 }
+.d-flex {
+    display: flex;
+    align-items: center;
+}
+
+.flex-grow-1 {
+    flex-grow: 1;
+}
+
+.mr-2 {
+    margin-right: 0.5rem;
+}
+
+.bg-custom-light {
+    background-color: #e9ecef; /* немного темнее, чем #f8f9fa */
+}
