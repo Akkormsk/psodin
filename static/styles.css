@@ -25,3 +25,11 @@
 .bg-custom-light {
     background-color: #e9ecef; /* немного темнее, чем #f8f9fa */
 }
+
+.form-control {
+    margin-right: 10px;
+}
+
+.calc-btn {
+    width: 4%;
+}

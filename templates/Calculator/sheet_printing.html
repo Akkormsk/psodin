@@ -3,8 +3,8 @@
 {% block content %}
 <form method="POST">
     <h2>Листовая печать</h2>
+    <label for="paper_type">Выберите тип бумаги:</label>
     <div class="form-group">
-        <label for="paper_type">Выберите тип бумаги:</label>
         <div class="d-flex">
             <select class="form-control" id="paper_type" name="paper_type" style="flex: 1; margin-right: 10px;">
                 {% for paper in paper_types %}
@@ -13,40 +13,48 @@
             </select>
             <input type="number" class="form-control" id="paper_quantity" name="paper_quantity" placeholder="Количество"
                    style="width: 15%;" value="{{ paper_quantity }}" required>
+            <button type="button" class="calc-btn btn btn-light" onclick="addPaperSection()">+</button>
         </div>
     </div>
+    <div id="paper-sections"></div>
     <div class="form-group">
-        <label>Выберите машину для печати:</label>
-        <div>
-            <input type="radio" id="xerox" name="machine_type" value="xerox" checked
-                   onclick="updatePrintOptions('xerox')">
-            <label for="xerox">Xerox</label>
-        </div>
-        <div>
-            <input type="radio" id="konica" name="machine_type" value="konica" onclick="updatePrintOptions('konica')">
-            <label for="konica">Konica</label>
-        </div>
-    </div>
-    <div id="print-content">
-        {% if machine_type == 'konica' %}
-            {% include 'Calculator/sheet_printing_konica.html' %}
-        {% else %}
-            {% include 'Calculator/sheet_printing_xerox.html' %}
-        {% endif %}
-    </div>
-    <div class="form-group">
-        <label for="postprint_type">Выберите тип постпечатной обработки:</label>
-        <div class="d-flex">
-            <select class="form-control" id="postprint_type" name="postprint_type" style="flex: 1; margin-right: 10px;">
-                {% for postprint in postprint_types %}
-                <option value="{{ postprint.id }}">{{ postprint.name }} - {{ postprint.price_per_unit }} руб/единица
-                </option>
-                {% endfor %}
+        <label for="print-type">Выберите тип печати:</label>
+        <div class="d-flex align-items-center">
+            <select class="form-control" id="machine_type" name="machine_type"
+                    onchange="updatePrintOptions(this.value)" style="width: 20%">
+                <option value="xerox">Xerox</option>
+                <option value="konica">Konica</option>
             </select>
-            <input type="number" class="form-control" id="postprint_quantity" name="postprint_quantity"
-                   placeholder="Количество" style="width: 15%;" value="{{ postprint_quantity }}" required>
+            <div id="print-content" style="flex: 1; margin-right: 10px;">
+                {% if machine_type == 'konica' %}
+                {% include 'Calculator/sheet_printing_konica.html' %}
+                {% else %}
+                {% include 'Calculator/sheet_printing_xerox.html' %}
+                {% endif %}
+            </div>
+            <input type="number" class="form-control" id="print_quantity" name="print_quantity" placeholder="Количество"
+                   style="width: 15%;" required value="{{ print_quantity }}">
+            <button type="button" class="calc-btn btn btn-light" onclick="addPrintSection()">+</button>
         </div>
     </div>
+    <div id="print-sections"></div>
+    <label for="postprint_type">Выберите тип постпечатной обработки:</label>
+    <div id="postprint-sections-wrap">
+        <div class="form-group">
+            <div class="d-flex">
+                <select class="form-control" id="postprint_type" name="postprint_type" style="flex: 1;">
+                    {% for postprint in postprint_types %}
+                    <option value="{{ postprint.id }}">{{ postprint.name }} - {{ postprint.price_per_unit }} руб/единица</option>
+                    {% endfor %}
+                </select>
+                <input type="number" class="form-control" id="postprint_quantity" name="postprint_quantity" placeholder="Количество"
+                       style="width: 15%;" value="{{ postprint_quantity }}" required>
+                <button type="button" class="calc-btn btn btn-light" onclick="addPostprintSection()">+</button>
+            </div>
+        </div>
+    </div>
+    <div id="postprint-sections"></div>
+
     <div class="form-group">
         <label for="work_time">Время работы (часы):</label>
         <input type="number" class="form-control" id="work_time" name="work_time" placeholder="Количество"
@@ -55,8 +63,51 @@
     <button type="submit" class="btn btn-primary">Рассчитать</button>
 </form>
 
+<!-- Template for new sections -->
+<template id="paper-section-template">
+    <div class="form-group d-flex align-items-center">
+        <select class="form-control" name="paper_type" style="flex: 1; margin-right: 10px;">
+            {% for paper in paper_types %}
+            <option value="{{ paper.id }}">{{ paper.name }} - {{ paper.price_per_unit }} руб/лист</option>
+            {% endfor %}
+        </select>
+        <input type="number" class="form-control" name="paper_quantity" placeholder="Количество" style="width: 15%;" required>
+        <button type="button" class="calc-btn btn btn-light" onclick="removeSection(this)">-</button>
+    </div>
+</template>
+
+<template id="print-section-template">
+    <div class="form-group d-flex align-items-center">
+        <select class="form-control" name="machine_type" onchange="updatePrintOptions(this.value)" style="width: 20%">
+            <option value="xerox">Xerox</option>
+            <option value="konica">Konica</option>
+        </select>
+        <div id="print-content" style="flex: 1; margin-right: 10px;">
+            {% if machine_type == 'konica' %}
+            {% include 'Calculator/sheet_printing_konica.html' %}
+            {% else %}
+            {% include 'Calculator/sheet_printing_xerox.html' %}
+            {% endif %}
+        </div>
+        <input type="number" class="form-control" name="print_quantity" placeholder="Количество" style="width: 15%;" required>
+        <button type="button" class="calc-btn btn btn-light" onclick="removeSection(this)">-</button>
+    </div>
+</template>
+
+<template id="postprint-section-template">
+    <div class="form-group d-flex align-items-center">
+        <select class="form-control" name="postprint_type" style="flex: 1; margin-right: 10px;">
+            {% for postprint in postprint_types %}
+            <option value="{{ postprint.id }}">{{ postprint.name }} - {{ postprint.price_per_unit }} руб/единица</option>
+            {% endfor %}
+        </select>
+        <input type="number" class="form-control" name="postprint_quantity" placeholder="Количество" style="width: 15%;" required>
+        <button type="button" class="calc-btn btn btn-light" onclick="removeSection(this)">-</button>
+    </div>
+</template>
+
 {% if total_cost %}
-<div class="mt-4 p-3 bg-light">
+<div class="mt-4 p-3 bg-custom-light">
     <h3>Розничная цена: {{ retail_price }} руб</h3>
     <ul>
         <li>Цена для постоянников: {{ regulars_price }} руб.</li>
@@ -65,12 +116,9 @@
     </ul>
     <h5>Закупочная стоимость: {{ total_cost }} руб</h5>
     <ul>
-        <li>Тип бумаги: {{ paper_type.name }}, количество: {{ paper_quantity }} на сумму {{ paper_cost }} руб.
-        </li>
+        <li>Тип бумаги: {{ paper_type.name }}, количество: {{ paper_quantity }} на сумму {{ paper_cost }} руб.</li>
         <li>Тип печати: {{ print_type.name }}, количество: {{ print_quantity }} на сумму {{ print_cost }} руб.</li>
-        <li>Тип постпечатной обработки: {{ postprint_type.name }}, количество: {{ postprint_quantity }} на сумму {{
-            postprint_cost }} руб.
-        </li>
+        <li>Тип постпечатной обработки: {{ postprint_type.name }}, количество: {{ postprint_quantity }} на сумму {{ postprint_cost }} руб.</li>
         <li>{{ work_time }} часов работы на сумму {{ work_cost }} руб.</li>
     </ul>
 </div>
@@ -86,11 +134,30 @@
 
     document.addEventListener("DOMContentLoaded", function() {
         const machineType = "{{ machine_type }}";
-        if (machineType === 'xerox') {
-            document.getElementById('xerox').checked = true;
-        } else if (machineType === 'konica') {
-            document.getElementById('konica').checked = true;
-        }
+        document.getElementById('machine_type').value = machineType;
     });
+
+    function addPaperSection() {
+        const template = document.getElementById('paper-section-template');
+        const clone = template.content.cloneNode(true);
+        document.getElementById('paper-sections').appendChild(clone);
+    }
+
+    function addPrintSection() {
+        const template = document.getElementById('print-section-template');
+        const clone = template.content.cloneNode(true);
+        document.getElementById('print-sections').appendChild(clone);
+    }
+
+    function addPostprintSection() {
+        const template = document.getElementById('postprint-section-template');
+        const clone = template.content.cloneNode(true);
+        document.getElementById('postprint-sections-wrap').appendChild(clone);
+    }
+
+    function removeSection(button) {
+        const section = button.parentElement;
+        section.remove();
+    }
 </script>
 {% endblock %}

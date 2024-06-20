@@ -1,15 +1,8 @@
-<div class="form-group">
-    <label for="print_type">Выберите тип печати:</label>
-    <div class="d-flex align-items-center">
-        <select class="form-control" id="print_type" name="print_type" style="flex: 1; margin-right: 10px;">
-            {% for print in print_types %}
-            <option value="{{ print.id }}" data-xerox="{{ print.price_per_unit_xerox }}"
-                    data-konica="{{ print.price_per_unit_konica }}">
-                {{ print.name }} - <span class="print-price">{{ print.price_per_unit_konica }}</span> руб/лист
-            </option>
-            {% endfor %}
-        </select>
-        <input type="number" class="form-control" id="print_quantity" name="print_quantity" placeholder="Количество"
-               style="width: 15%;" required value="{{ print_quantity }}">
-    </div>
-</div>
+<select class="form-control" id="print_type" name="print_type" style="flex: 1; margin-right: 10px;">
+    {% for print in print_types %}
+    <option value="{{ print.id }}" data-xerox="{{ print.price_per_unit_xerox }}"
+            data-konica="{{ print.price_per_unit_konica }}">
+        {{ print.name }} - <span class="print-price">{{ print.price_per_unit_konica }}</span> руб/лист
+    </option>
+    {% endfor %}
+</select>
