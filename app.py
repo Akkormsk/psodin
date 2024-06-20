@@ -56,8 +56,8 @@ def sheet_printing():
         else:
             print_cost = print_quantity * print_type.price_per_unit_konica
 
-        paper_cost = paper_quantity * paper_type.price_per_unit
-        postprint_cost = postprint_quantity * postprint_type.price_per_unit
+        paper_cost = round(paper_quantity * paper_type.price_per_unit, 2)
+        postprint_cost = round(postprint_quantity * postprint_type.price_per_unit, 2)
         work = Variables.query.get(1)
         margin_ratio = Variables.query.get(2)
         regulars_discount = Variables.query.get(5)
@@ -69,27 +69,29 @@ def sheet_printing():
         else:
             work_cost = 0
 
-        total_cost = paper_cost + print_cost + postprint_cost + work_cost
-        retail_price = total_cost * margin_ratio.value
-        regulars_price = retail_price * regulars_discount.value
-        partners_price = retail_price * partners_discount.value
-        urgent_price = retail_price * urgency.value
+        total_cost = round(paper_cost + print_cost + postprint_cost + work_cost, 2)
+        retail_price = round(total_cost * margin_ratio.value, 2)
+        regulars_price = round(retail_price * regulars_discount.value, 2)
+        partners_price = round(retail_price * partners_discount.value, 2)
+        urgent_price = round(retail_price * urgency.value, 2)
 
         return render_template('Calculator/sheet_printing.html', total_cost=total_cost,
                                paper_type=paper_type, paper_quantity=paper_quantity,
                                print_type=print_type, print_quantity=print_quantity,
                                postprint_type=postprint_type, postprint_quantity=postprint_quantity,
-                               work_time=work_time,
+                               work_time=work_time, paper_cost=paper_cost, postprint_cost=postprint_cost,
                                paper_types=PaperType.query.all(),
                                print_types=PrintType.query.all(),
                                postprint_types=PostPrintProcessing.query.all(),
-                               work=work.value, print_cost=print_cost, retail_price=retail_price,
-                               regulars_price=regulars_price, partners_price=partners_price, urgent_price=urgent_price)
+                               work_cost=work_cost, print_cost=print_cost, retail_price=retail_price,
+                               regulars_price=regulars_price, partners_price=partners_price, urgent_price=urgent_price,
+                               machine_type=machine_type)
 
     return render_template('Calculator/sheet_printing.html',
                            paper_types=PaperType.query.all(),
                            print_types=PrintType.query.all(),
-                           postprint_types=PostPrintProcessing.query.all())
+                           postprint_types=PostPrintProcessing.query.all(),
+                           machine_type='xerox')  # Default value for initial load
 
 
 @app.route('/update_print_options')
