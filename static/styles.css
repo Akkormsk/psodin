@@ -28,6 +28,7 @@
 
 .form-control, .form-group {
     margin-right: 10px;
+    position: relative;
 }
 
 .calc-btn {
@@ -37,4 +38,9 @@
 .btn-light {
     background-color: #e9ecef !important;
     border-color: #e9ecef;
+}
+
+select {
+    display: block;
+    width: 100%;
 }
