@@ -26,10 +26,15 @@
     background-color: #e9ecef; /* немного темнее, чем #f8f9fa */
 }
 
-.form-control {
+.form-control, .form-group {
     margin-right: 10px;
 }
 
 .calc-btn {
     width: 4%;
+}
+
+.btn-light {
+    background-color: #e9ecef !important;
+    border-color: #e9ecef;
 }

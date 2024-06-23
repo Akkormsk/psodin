@@ -42,13 +42,13 @@ def sheet_printing():
         paper_quantity = int(request.form.get('paper_quantity', ''))
         print_type_id = request.form['print_type']
         print_quantity = int(request.form.get('print_quantity', ''))
-        postprint_type_id = request.form['postprint_type']
-        postprint_quantity = int(request.form.get('postprint_quantity', ''))
+        postprint_types = request.form.getlist('postprint_type')
+        postprint_quantities = request.form.getlist('postprint_quantity')
         work_time = float(request.form['work_time'])
 
         paper_type = PaperType.query.get(paper_type_id)
         print_type = PrintType.query.get(print_type_id)
-        postprint_type = PostPrintProcessing.query.get(postprint_type_id)
+        postprint_details = []
 
         machine_type = request.form['machine_type']
         if machine_type == 'xerox':
@@ -57,7 +57,13 @@ def sheet_printing():
             print_cost = print_quantity * print_type.price_per_unit_konica
 
         paper_cost = round(paper_quantity * paper_type.price_per_unit, 2)
-        postprint_cost = round(postprint_quantity * postprint_type.price_per_unit, 2)
+        postprint_cost = 0
+        for i in range(len(postprint_types)):
+            postprint_type = PostPrintProcessing.query.get(postprint_types[i])
+            postprint_quantity = int(postprint_quantities[i])
+            postprint_cost += postprint_quantity * postprint_type.price_per_unit
+            postprint_details.append((postprint_type, postprint_quantity))
+
         work = Variables.query.get(1)
         margin_ratio = Variables.query.get(2)
         regulars_discount = Variables.query.get(5)
@@ -78,7 +84,7 @@ def sheet_printing():
         return render_template('Calculator/sheet_printing.html', total_cost=total_cost,
                                paper_type=paper_type, paper_quantity=paper_quantity,
                                print_type=print_type, print_quantity=print_quantity,
-                               postprint_type=postprint_type, postprint_quantity=postprint_quantity,
+                               postprint_details=postprint_details,
                                work_time=work_time, paper_cost=paper_cost, postprint_cost=postprint_cost,
                                paper_types=PaperType.query.all(),
                                print_types=PrintType.query.all(),
