@@ -38,36 +38,42 @@ def index():
 @app.route('/sheet_printing', methods=['GET', 'POST'])
 def sheet_printing():
     if request.method == 'POST':
-        paper_types = request.form.getlist('paper_type')
+        paper_type_ids = request.form.getlist('paper_type')
         paper_quantities = request.form.getlist('paper_quantity')
-        print_type_id = request.form['print_type']
-        print_quantity = int(request.form.get('print_quantity', ''))
-        machine_type = request.form['machine_type']
+        machine_types = request.form.getlist('machine_type')
+        print_type_ids = request.form.getlist('print_type')
+        print_quantities = request.form.getlist('print_quantity')
         postprint_types = request.form.getlist('postprint_type')
         postprint_quantities = request.form.getlist('postprint_quantity')
         work_time = float(request.form['work_time'])
 
         paper_details = []
         paper_cost = 0
-        for k in range(len(paper_types)):
-            paper_type = PaperType.query.get(paper_types[k])
-            paper_quantity = int(paper_quantities[k])
-            paper_cost += paper_quantity * paper_type.price_per_unit
-            paper_details.append((paper_type, paper_quantity))
+        for i in range(len(paper_type_ids)):
+            paper = PaperType.query.get(paper_type_ids[i])
+            quantity = int(paper_quantities[i])
+            paper_cost += quantity * paper.price_per_unit
+            paper_details.append((paper, quantity))
 
-        print_type = PrintType.query.get(print_type_id)
-        if machine_type == 'xerox':
-            print_cost = print_quantity * print_type.price_per_unit_xerox
-        else:
-            print_cost = print_quantity * print_type.price_per_unit_konica
+        print_details = []
+        print_cost = 0
+        for i in range(len(machine_types)):
+            machine_type = machine_types[i]
+            print_type = PrintType.query.get(print_type_ids[i])
+            quantity = int(print_quantities[i])
+            if machine_type == 'xerox':
+                print_cost += quantity * print_type.price_per_unit_xerox
+            else:
+                print_cost += quantity * print_type.price_per_unit_konica
+            print_details.append((machine_type, print_type, quantity))
 
         postprint_details = []
         postprint_cost = 0
         for i in range(len(postprint_types)):
             postprint_type = PostPrintProcessing.query.get(postprint_types[i])
-            postprint_quantity = int(postprint_quantities[i])
-            postprint_cost += postprint_quantity * postprint_type.price_per_unit
-            postprint_details.append((postprint_type, postprint_quantity))
+            quantity = int(postprint_quantities[i])
+            postprint_cost += quantity * postprint_type.price_per_unit
+            postprint_details.append((postprint_type, quantity))
 
         work = Variables.query.get(1)
         margin_ratio = Variables.query.get(2)
@@ -75,10 +81,7 @@ def sheet_printing():
         partners_discount = Variables.query.get(6)
         urgency = Variables.query.get(7)
 
-        if work:
-            work_cost = work_time * work.value
-        else:
-            work_cost = 0
+        work_cost = work_time * work.value if work else 0
 
         total_cost = round(paper_cost + print_cost + postprint_cost + work_cost, 2)
         retail_price = round(total_cost * margin_ratio.value, 2)
@@ -87,16 +90,14 @@ def sheet_printing():
         urgent_price = round(retail_price * urgency.value, 2)
 
         return render_template('Calculator/sheet_printing.html', total_cost=total_cost,
-                               paper_details = paper_details,
-                               print_type=print_type, print_quantity=print_quantity,
-                               postprint_details=postprint_details,
-                               work_time=work_time, paper_cost=paper_cost, postprint_cost=postprint_cost,
-                               paper_types=PaperType.query.all(),
-                               print_types=PrintType.query.all(),
-                               postprint_types=PostPrintProcessing.query.all(),
-                               work_cost=work_cost, print_cost=print_cost, retail_price=retail_price,
-                               regulars_price=regulars_price, partners_price=partners_price, urgent_price=urgent_price,
-                               machine_type=machine_type)
+                               paper_details=paper_details, print_details=print_details,
+                               postprint_details=postprint_details, work_time=work_time,
+                               paper_cost=paper_cost, postprint_cost=postprint_cost,
+                               paper_types=PaperType.query.all(), print_types=PrintType.query.all(),
+                               postprint_types=PostPrintProcessing.query.all(), work_cost=work_cost,
+                               print_cost=print_cost, retail_price=retail_price,
+                               regulars_price=regulars_price, partners_price=partners_price,
+                               urgent_price=urgent_price, machine_type=machine_types[0])
 
     return render_template('Calculator/sheet_printing.html',
                            paper_types=PaperType.query.all(),
@@ -104,7 +105,8 @@ def sheet_printing():
                            postprint_types=PostPrintProcessing.query.all(),
                            machine_type='xerox',
                            paper_details=[(0,)],
-                           postprint_details=[(0,)])  # Default value for initial load
+                           print_details=[('xerox', 0,)],
+                           postprint_details=[(0,)])  # Default values for initial load
 
 
 @app.route('/update_print_options')

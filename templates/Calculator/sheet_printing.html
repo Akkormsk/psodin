@@ -21,28 +21,33 @@
         {% endfor %}
     </div>
 
-
-    <div class="form-group">
-        <label for="print-type">Выберите тип печати:</label>
-        <div class="d-flex align-items-center">
-            <select class="form-control" id="machine_type" name="machine_type"
-                    onchange="updatePrintOptions(this.value)" style="width: 20%">
-                <option value="xerox">Xerox</option>
-                <option value="konica">Konica</option>
+    <label for="machine-type">Выберите тип печати:</label>
+    <div id="print_sections">
+        {% for print_detail in print_details %}
+        <div class="d-flex form-group">
+            <select class="form-control" id="machine_type_{{ loop.index }}" name="machine_type"
+                    onchange="updatePrintOptions(this.value, this)" style="width: 20%">
+                <option value="xerox" {% if print_detail[0]==
+                'xerox' %}selected{% endif %}>Xerox</option>
+                <option value="konica" {% if print_detail[0]==
+                'konica' %}selected{% endif %}>Konica</option>
             </select>
-            <div id="print-content" style="flex: 1; margin-right: 10px;">
-                {% if machine_type == 'konica' %}
+            <div id="print-content-{{ loop.index }}" style="flex: 1; margin-right: 10px;">
+                {% if print_detail[0] == 'konica' %}
                 {% include 'Calculator/sheet_printing_konica.html' %}
                 {% else %}
                 {% include 'Calculator/sheet_printing_xerox.html' %}
                 {% endif %}
             </div>
             <input type="number" class="form-control" id="print_quantity" name="print_quantity" placeholder="Количество"
-                   style="width: 15%;" required value="{{ print_quantity }}">
+                   style="width: 15%;" required value="{{ print_detail[2] }}">
+            <input type="hidden" name="machine_type_hidden" value="{{ print_detail[0] }}">
             <button type="button" class="calc-btn btn btn-light" onclick="addPrintSection()">+</button>
         </div>
-    </div>
+        {% endfor %}
 
+
+    </div>
 
     <label for="postprint_type">Выберите тип постпечатной обработки:</label>
     <div id="postprint-sections-wrap">
@@ -89,16 +94,13 @@
 
 <template id="print-section-template">
     <div class="form-group d-flex align-items-center">
-        <select class="form-control" name="machine_type" onchange="updatePrintOptions(this.value)" style="width: 20%">
-            <option value="xerox">Xerox</option>
+        <select class="form-control" name="machine_type" onchange="updatePrintOptions(this.value, this)"
+                style="width: 20%">
+            <option value="xerox" selected>Xerox</option>
             <option value="konica">Konica</option>
         </select>
-        <div id="print-content" style="flex: 1; margin-right: 10px;">
-            {% if machine_type == 'konica' %}
-            {% include 'Calculator/sheet_printing_konica.html' %}
-            {% else %}
+        <div id="print-content-template" style="flex: 1; margin-right: 10px;">
             {% include 'Calculator/sheet_printing_xerox.html' %}
-            {% endif %}
         </div>
         <input type="number" class="form-control" name="print_quantity" placeholder="Количество" style="width: 15%;"
                required>
@@ -132,63 +134,24 @@
     <ul>
         {% for paper_detail in paper_details %}
         <li>Тип бумаги ({{ loop.index }}): {{ paper_detail[0].name }}, количество: {{ paper_detail[1] }} на сумму {{
-            paper_detail[1] * paper_detail[0].price_per_unit }} руб.
+            (paper_detail[1] * paper_detail[0].price_per_unit) | round(2) }} руб.
         </li>
         {% endfor %}
-        <li>Тип печати: {{ print_type.name }}, количество: {{ print_quantity }} на сумму {{ print_cost }} руб.</li>
+        {% for print_detail in print_details %}
+        <li>Тип печати ({{ loop.index }}): {{ print_detail[0] }} - {{ print_detail[1].name }}, количество: {{
+            print_detail[2] }} на сумму {{
+            (print_detail[2] * (print_detail[1].price_per_unit_xerox if print_detail[0] == 'xerox' else
+            print_detail[1].price_per_unit_konica)) | round(2) }} руб.
+        </li>
+        {% endfor %}
         {% for postprint_detail in postprint_details %}
         <li>Тип постпечатной обработки ({{ loop.index }}): {{ postprint_detail[0].name }}, количество: {{
-            postprint_detail[1] }} на сумму {{ postprint_detail[1] * postprint_detail[0].price_per_unit }} руб.
+            postprint_detail[1] }} на сумму {{ postprint_detail[1] * postprint_detail[0].price_per_unit | round(2) }}
+            руб.
         </li>
         {% endfor %}
         <li>{{ work_time }} часов работы на сумму {{ work_cost }} руб.</li>
     </ul>
 </div>
 {% endif %}
-<script>
-    function updatePrintOptions(machineType) {
-        fetch(`/update_print_options?machine_type=${machineType}`)
-            .then(response => response.text())
-            .then(html => {
-                document.getElementById('print-content').innerHTML = html;
-            });
-    }
-
-    document.addEventListener("DOMContentLoaded", function() {
-        const machineType = "{{ machine_type }}";
-        document.getElementById('machine_type').value = machineType;
-    });
-
-    function addPaperSection() {
-        const template = document.getElementById('paper-section-template');
-        const clone = template.content.cloneNode(true);
-        document.getElementById('paper-sections').appendChild(clone);
-    }
-
-    function addPrintSection() {
-        const template = document.getElementById('print-section-template');
-        const clone = template.content.cloneNode(true);
-        document.getElementById('print-sections').appendChild(clone);
-    }
-
-    function addPostprintSection() {
-        const template = document.getElementById('postprint-section-template');
-        const clone = template.content.cloneNode(true);
-        document.getElementById('postprint-sections-wrap').appendChild(clone);
-    }
-
-    function removeSection(button) {
-        const section = button.parentElement;
-        section.remove();
-    }
-
-    function resetForm() {
-        window.location.href = "/sheet_printing";
-    }
-
-
-
-
-
-</script>
 {% endblock %}
