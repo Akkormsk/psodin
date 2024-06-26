@@ -44,3 +44,8 @@ select {
     display: block;
     width: 100%;
 }
+
+.small-text {
+    font-size: smaller;
+    font-weight: normal;
+}

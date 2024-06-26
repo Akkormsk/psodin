@@ -49,10 +49,12 @@ def sheet_printing():
 
         paper_details = []
         paper_cost = 0
+        total_paper = 0
         for i in range(len(paper_type_ids)):
             paper = PaperType.query.get(paper_type_ids[i])
             quantity = int(paper_quantities[i])
             paper_cost += quantity * paper.price_per_unit
+            total_paper += quantity
             paper_details.append((paper, quantity))
 
         print_details = []
@@ -84,7 +86,7 @@ def sheet_printing():
         work_cost = work_time * work.value if work else 0
 
         total_cost = round(paper_cost + print_cost + postprint_cost + work_cost, 2)
-        retail_price = round(total_cost * margin_ratio.value, 2)
+        retail_price = round(total_cost * margin_ratio.value * (1 + (1/total_paper)), 2)
         regulars_price = round(retail_price * regulars_discount.value, 2)
         partners_price = round(retail_price * partners_discount.value, 2)
         urgent_price = round(retail_price * urgency.value, 2)
