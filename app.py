@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request, flash
+from flask import Flask, render_template, redirect, url_for, request, flash, jsonify
 from flask_migrate import Migrate
 from config import Config
 from models import *
@@ -47,6 +47,8 @@ def sheet_printing():
         postprint_quantities = request.form.getlist('postprint_quantity')
         work_time = float(request.form['work_time'])
 
+        materials_text = ""
+
         paper_details = []
         paper_cost = 0
         total_paper = 0
@@ -56,6 +58,7 @@ def sheet_printing():
             paper_cost += quantity * paper.price_per_unit
             total_paper += quantity
             paper_details.append((paper, quantity))
+            materials_text += f"Бумага {i + 1} - {paper.name} - {quantity} шт\r\n"
 
         print_details = []
         print_cost = 0
@@ -68,6 +71,7 @@ def sheet_printing():
             else:
                 print_cost += quantity * print_type.price_per_unit_konica
             print_details.append((machine_type, print_type, quantity))
+            materials_text += f"Печать {i + 1} - {machine_type} - {print_type.name} - {quantity} шт\r\n"
 
         postprint_details = []
         postprint_cost = 0
@@ -76,6 +80,7 @@ def sheet_printing():
             quantity = int(postprint_quantities[i])
             postprint_cost += quantity * postprint_type.price_per_unit
             postprint_details.append((postprint_type, quantity))
+            materials_text += f"Постпечатка {i + 1} - {postprint_type.name} - {quantity} шт\r\n"
 
         work = Variables.query.get(1)
         margin_ratio = Variables.query.get(2)
@@ -86,7 +91,7 @@ def sheet_printing():
         work_cost = work_time * work.value if work else 0
 
         total_cost = round(paper_cost + print_cost + postprint_cost + work_cost, 2)
-        retail_price = round(total_cost * margin_ratio.value * (1 + (1/total_paper)), 2)
+        retail_price = round(total_cost * margin_ratio.value * (1 + (1 / total_paper)), 2)
         regulars_price = round(retail_price * regulars_discount.value, 2)
         partners_price = round(retail_price * partners_discount.value, 2)
         urgent_price = round(retail_price * urgency.value, 2)
@@ -99,7 +104,7 @@ def sheet_printing():
                                postprint_types=PostPrintProcessing.query.all(), work_cost=work_cost,
                                print_cost=print_cost, retail_price=retail_price,
                                regulars_price=regulars_price, partners_price=partners_price,
-                               urgent_price=urgent_price, machine_type=machine_types[0])
+                               urgent_price=urgent_price, machine_type=machine_types[0], materials_text=materials_text)
 
     return render_template('Calculator/sheet_printing.html',
                            paper_types=PaperType.query.all(),
@@ -109,6 +114,34 @@ def sheet_printing():
                            paper_details=[(0,)],
                            print_details=[('xerox', 0,)],
                            postprint_details=[(0,)])  # Default values for initial load
+
+
+@app.route('/save_order', methods=['POST'])
+def save_order():
+    try:
+        # Логирование всех данных, полученных в запросе
+        app.logger.info(f"Received form data: {request.form}")
+
+        order_id = request.form.get('order_id')
+        retail_price = request.form.get('retail_price')
+        cost_price = request.form.get('total_cost')
+        materials = request.form.get('materials')
+
+        if not order_id or not retail_price or not cost_price or not materials:
+            raise ValueError("Missing one or more required fields: order_id, retail_price, cost_price, materials")
+
+        # Логирование полученных данных
+        app.logger.info(
+            f"Received data - Order ID: {order_id}, Retail Price: {retail_price}, Cost Price: {cost_price}, Materials: {materials}")
+
+        order = Order(id=order_id, retail_price=float(retail_price), cost_price=float(cost_price), materials=materials)
+        db.session.add(order)
+        db.session.commit()
+
+        return jsonify({'status': 'success'}), 200
+    except Exception as e:
+        app.logger.error(f"Error: {str(e)}")
+        return jsonify({'status': 'error', 'message': str(e)}), 400
 
 
 @app.route('/update_print_options')
@@ -149,10 +182,12 @@ def login():
 
 
 @app.route('/logout')
+@app.route('/admin/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('index'))
+    # return redirect(url_for('security.login'))
 
 
 if __name__ == '__main__':

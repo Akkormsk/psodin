@@ -45,8 +45,6 @@
             <button type="button" class="calc-btn btn btn-light" onclick="addPrintSection()">+</button>
         </div>
         {% endfor %}
-
-
     </div>
 
     <label for="postprint_type">Выберите тип постпечатной обработки:</label>
@@ -72,9 +70,11 @@
         <input type="number" class="form-control" id="work_time" name="work_time" placeholder="Количество"
                style="width: 20%;" value="{{ work_time }}" required step="0.5" min="0">
     </div>
+
     <div class="form-group">
         <button type="submit" class="btn btn-primary">Рассчитать</button>
         <button type="button" class="btn btn-light ml-2" onclick="resetForm()">Сбросить</button>
+        <button type="button" class="btn btn-success ml-2" onclick="saveOrder()">Записать</button>
     </div>
 </form>
 
@@ -163,4 +163,33 @@
     </ul>
 </div>
 {% endif %}
+
+
+<!-- Пример полей для retail_price и cost_price, которые заполняются при расчете -->
+<input type="hidden" id="total_cost" name="total_cost" value="{{ total_cost }}">
+<input type="hidden" id="retail_price" name="retail_price" value="{{ retail_price }}">
+<input type="hidden" id="materials" name="materials" value="{{ materials_text }}">
+
+<!-- Modal для ввода ID заказа -->
+<div class="modal" id="orderIdModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Введите ID заказа</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="number" class="form-control" id="orderIdInput" placeholder="ID заказа">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="confirmOrderId()">Сохранить</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
+
+

@@ -50,3 +50,10 @@ class Variables(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     value = db.Column(db.Float, nullable=False)
+
+
+class Order(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    retail_price = db.Column(db.Float, nullable=False)
+    cost_price = db.Column(db.Float, nullable=False)
+    materials = db.Column(db.String, nullable=False)

@@ -64,3 +64,90 @@ function removeSection(button) {
 function resetForm() {
     window.location.href = "/sheet_printing";
 }
+
+function saveOrder() {
+    const totalCost = document.getElementById('total_cost').value;
+    const retailPrice = document.getElementById('retail_price').value;
+
+    if (!totalCost || !retailPrice) {
+        alert('Сначала необходимо произвести расчет.');
+        return;  // Не открывать модальное окно
+    }
+
+    console.log('Записать нажата');
+    $('#orderIdModal').modal('show');
+}
+
+//function gatherMaterials() {
+//    let materials = [];
+//
+//    // Собираем данные о бумаге
+//    document.querySelectorAll('#paper-sections .form-group').forEach(section => {
+//        let paperType = section.querySelector('select[name="paper_type"] option:checked').innerText;
+//        let paperQuantity = section.querySelector('input[name="paper_quantity"]').value;
+//        materials.push(`Бумага: ${paperType}, Количество: ${paperQuantity}`);
+//    });
+//
+//    // Собираем данные о печати
+//    document.querySelectorAll('#print_sections .form-group').forEach(section => {
+//        let machineType = section.querySelector('select[name="machine_type"] option:checked').innerText;
+//        let printType = section.querySelector('select[name="print_type"] option:checked').innerText;
+//        let printQuantity = section.querySelector('input[name="print_quantity"]').value;
+//        materials.push(`Печать: ${machineType} - ${printType}, Количество: ${printQuantity}`);
+//    });
+//
+//    // Собираем данные о постпечатной обработке
+//    document.querySelectorAll('#postprint-sections-wrap .form-group').forEach(section => {
+//        let postprintType = section.querySelector('select[name="postprint_type"] option:checked').innerText;
+//        let postprintQuantity = section.querySelector('input[name="postprint_quantity"]').value;
+//        materials.push(`Постпечатка: ${postprintType}, Количество: ${postprintQuantity}`);
+//    });
+//
+//    return materials.join('; ');
+//}
+
+function confirmOrderId() {
+    const orderId = document.getElementById('orderIdInput').value;
+    console.log('ID заказа:', orderId);
+    if (orderId) {
+        const form = document.getElementById('calcForm');
+        const formData = new FormData(form);
+
+        // Собираем данные о материалах и добавляем в formData
+//        const materials = gatherMaterials();
+        formData.append('order_id', orderId);
+
+
+        // Добавляем total_cost и retail_price из скрытых полей
+        const totalCost = document.getElementById('total_cost').value;
+        const retailPrice = document.getElementById('retail_price').value;
+        const materials = document.getElementById('materials').value;
+        formData.append('total_cost', totalCost);
+        formData.append('retail_price', retailPrice);
+        formData.append('materials', materials);
+
+        // Логирование всех данных формы
+        for (let [key, value] of formData.entries()) {
+            console.log(key, value);
+        }
+
+        fetch('/save_order', {
+            method: 'POST',
+            body: formData
+        }).then(response => {
+            if (response.ok) {
+                alert('Заказ сохранен успешно!');
+                $('#orderIdModal').modal('hide');
+            } else {
+                response.json().then(data => {
+                    alert('Ошибка при сохранении заказа: ' + data.message);
+                });
+            }
+        }).catch(error => {
+            console.error('Ошибка:', error);
+            alert('Ошибка при сохранении заказа: ' + error.message);
+        });
+    } else {
+        alert('Введите ID заказа.');
+    }
+}
