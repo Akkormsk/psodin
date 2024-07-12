@@ -24,6 +24,7 @@
     <label for="machine-type">Выберите тип печати:</label>
     <div id="print_sections">
         {% for print_detail in print_details %}
+        {% set print_context = {'print_detail': print_detail, 'print_types': print_types} %}
         <div class="d-flex form-group">
             <select class="form-control" id="machine_type_{{ loop.index }}" name="machine_type"
                     onchange="updatePrintOptions(this.value, this)" style="width: 20%">
@@ -38,6 +39,7 @@
                 {% else %}
                 {% include 'Calculator/sheet_printing_xerox.html' %}
                 {% endif %}
+
             </div>
             <input type="number" class="form-control" id="print_quantity" name="print_quantity" placeholder="Количество"
                    style="width: 15%;" required value="{{ print_detail[2] }}">

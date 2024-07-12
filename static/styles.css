@@ -60,3 +60,24 @@ select {
     padding-left: 0;
     padding-right: 0;
 }
+
+.container {
+    margin-top: 10px;
+    max-width: 80%;
+}
+
+.table {
+    width: 100%;
+}
+
+.table thead th {
+    background-color: #f8f9fa;
+}
+
+h2 {
+    font-size: 1.5rem;
+}
+
+.materials-cell {
+    white-space: pre-line;  /* Отображение переноса строк */
+}

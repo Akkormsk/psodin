@@ -58,7 +58,7 @@ def sheet_printing():
             paper_cost += quantity * paper.price_per_unit
             total_paper += quantity
             paper_details.append((paper, quantity))
-            materials_text += f"Бумага {i + 1} - {paper.name} - {quantity} шт\r\n"
+            materials_text += f"Бумага {i + 1} - {paper.name} - {quantity} шт по цене {paper.price_per_unit}\r\n"
 
         print_details = []
         print_cost = 0
@@ -68,10 +68,11 @@ def sheet_printing():
             quantity = int(print_quantities[i])
             if machine_type == 'xerox':
                 print_cost += quantity * print_type.price_per_unit_xerox
+                materials_text += f"Печать {i + 1} - {machine_type} - {print_type.name} - {quantity} шт по цене {print_type.price_per_unit_xerox}\r\n"
             else:
                 print_cost += quantity * print_type.price_per_unit_konica
+                materials_text += f"Печать {i + 1} - {machine_type} - {print_type.name} - {quantity} шт по цене {print_type.price_per_unit_konica}\r\n"
             print_details.append((machine_type, print_type, quantity))
-            materials_text += f"Печать {i + 1} - {machine_type} - {print_type.name} - {quantity} шт\r\n"
 
         postprint_details = []
         postprint_cost = 0
@@ -80,7 +81,7 @@ def sheet_printing():
             quantity = int(postprint_quantities[i])
             postprint_cost += quantity * postprint_type.price_per_unit
             postprint_details.append((postprint_type, quantity))
-            materials_text += f"Постпечатка {i + 1} - {postprint_type.name} - {quantity} шт\r\n"
+            materials_text += f"Постпечатка {i + 1} - {postprint_type.name} - {quantity} шт по цене {postprint_type.price_per_unit}\r\n"
 
         work = Variables.query.get(1)
         margin_ratio = Variables.query.get(2)
@@ -89,6 +90,7 @@ def sheet_printing():
         urgency = Variables.query.get(7)
 
         work_cost = work_time * work.value if work else 0
+        materials_text += f"Работа - {work_time} ч. по цене {work.value}\r\n"
 
         total_cost = round(paper_cost + print_cost + postprint_cost + work_cost, 2)
         retail_price = round(total_cost * margin_ratio.value * (1 + (1 / total_paper)), 2)
@@ -188,6 +190,13 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
     # return redirect(url_for('security.login'))
+
+
+@app.route('/orders')
+@app.route('/calculator/orders')
+def show_orders():
+    orders = Order.query.all()
+    return render_template('Calculator/orders.html', orders=orders)
 
 
 if __name__ == '__main__':

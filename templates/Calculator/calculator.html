@@ -11,6 +11,9 @@
     <li class="nav-item {% if request.path == url_for('wide_format_printing') %}active{% endif %}">
         <a class="nav-link" href="{{ url_for('wide_format_printing') }}">Широкоформатная печать</a>
     </li>
+    <li class="nav-item {% if request.path == url_for('show_orders') %}active{% endif %}">
+        <a class="nav-link" href="{{ url_for('show_orders') }}">Заказы</a>
+    </li>
 </ul>
 {% endblock %}
 
