@@ -1,0 +1,5 @@
+# .gitignore
+print_shop.db
+print_shop_backup.db
+*.sqlite3
+*.db
