@@ -1,9 +1,1 @@
-<select class="form-control" name="print_type" style="flex: 1; margin-right: 10px;">
-    {% for print in print_types %}
-    <option value="{{ print.id }}"
-            data-xerox="{{ print.price_per_unit_xerox }}"
-            data-konica="{{ print.price_per_unit_konica }}">
-        {{ print.name }} - {{ print.price_per_unit_konica }} руб/лист
-    </option>
-    {% endfor %}
-</select>
+

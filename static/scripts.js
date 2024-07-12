@@ -27,12 +27,19 @@ function updatePrintOptions(machineType, element) {
     const contentDiv = parentDiv.querySelector('[id^=print-content]');
 
     fetch(`/update_print_options?machine_type=${machineType}`)
-        .then(response => response.text())
-        .then(html => {
-            contentDiv.innerHTML = html;
+        .then(response => response.json())
+        .then(options => {
+            let optionsHtml = '';
+            options.forEach(option => {
+                optionsHtml += `<option value="${option.id}" data-xerox="${option.price}" data-konica="${option.price}">
+                                    ${option.name} - ${option.price} руб/лист
+                                </option>`;
+            });
+            contentDiv.querySelector('select[name="print_type"]').innerHTML = optionsHtml;
             updatePrintPrices(machineType, contentDiv);
         });
 }
+
 
 function updatePrintPrices(machineType, contentDiv) {
     contentDiv.querySelectorAll('option').forEach(function(option) {
@@ -77,34 +84,6 @@ function saveOrder() {
     console.log('Записать нажата');
     $('#orderIdModal').modal('show');
 }
-
-//function gatherMaterials() {
-//    let materials = [];
-//
-//    // Собираем данные о бумаге
-//    document.querySelectorAll('#paper-sections .form-group').forEach(section => {
-//        let paperType = section.querySelector('select[name="paper_type"] option:checked').innerText;
-//        let paperQuantity = section.querySelector('input[name="paper_quantity"]').value;
-//        materials.push(`Бумага: ${paperType}, Количество: ${paperQuantity}`);
-//    });
-//
-//    // Собираем данные о печати
-//    document.querySelectorAll('#print_sections .form-group').forEach(section => {
-//        let machineType = section.querySelector('select[name="machine_type"] option:checked').innerText;
-//        let printType = section.querySelector('select[name="print_type"] option:checked').innerText;
-//        let printQuantity = section.querySelector('input[name="print_quantity"]').value;
-//        materials.push(`Печать: ${machineType} - ${printType}, Количество: ${printQuantity}`);
-//    });
-//
-//    // Собираем данные о постпечатной обработке
-//    document.querySelectorAll('#postprint-sections-wrap .form-group').forEach(section => {
-//        let postprintType = section.querySelector('select[name="postprint_type"] option:checked').innerText;
-//        let postprintQuantity = section.querySelector('input[name="postprint_quantity"]').value;
-//        materials.push(`Постпечатка: ${postprintType}, Количество: ${postprintQuantity}`);
-//    });
-//
-//    return materials.join('; ');
-//}
 
 function confirmOrderId() {
     const orderId = document.getElementById('orderIdInput').value;

@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, url_for, request, flash, jso
 from flask_migrate import Migrate
 from config import Config
 from models import *
-from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user, login_required
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
 from admin import create_admin
 from flask_session import Session
 
@@ -98,6 +98,8 @@ def sheet_printing():
         partners_price = round(retail_price * partners_discount.value, 2)
         urgent_price = round(retail_price * urgency.value, 2)
 
+        print(print_details)
+
         return render_template('Calculator/sheet_printing.html', total_cost=total_cost,
                                paper_details=paper_details, print_details=print_details,
                                postprint_details=postprint_details, work_time=work_time,
@@ -146,13 +148,27 @@ def save_order():
         return jsonify({'status': 'error', 'message': str(e)}), 400
 
 
-@app.route('/update_print_options')
+@app.route('/update_print_options', methods=['GET'])
 def update_print_options():
     machine_type = request.args.get('machine_type')
-    if machine_type == 'xerox':
-        return render_template('Calculator/sheet_printing_xerox.html', print_types=PrintType.query.all())
-    elif machine_type == 'konica':
-        return render_template('Calculator/sheet_printing_konica.html', print_types=PrintType.query.all())
+    print_types = PrintType.query.all()
+    options = []
+
+    for print_type in print_types:
+        if machine_type == 'xerox':
+            options.append({
+                'id': print_type.id,
+                'name': print_type.name,
+                'price': print_type.price_per_unit_xerox
+            })
+        elif machine_type == 'konica':
+            options.append({
+                'id': print_type.id,
+                'name': print_type.name,
+                'price': print_type.price_per_unit_konica
+            })
+
+    return jsonify(options)
 
 
 @app.route('/calculator')
