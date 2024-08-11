@@ -2,8 +2,8 @@
 
 {% block content %}
 <form id="calcForm" method="POST">
-    <h2>Листовая печать</h2>
-    <label for="paper_type">Выберите тип бумаги:</label>
+    <h2>Цифровая печать</h2>
+    <label for="paper_type">Выберите бумагу:</label>
     <div id="paper-sections">
         {% for paper_detail in paper_details %}
         <div class="form-group d-flex">
@@ -49,7 +49,7 @@
         {% endfor %}
     </div>
 
-    <label for="postprint_type">Выберите тип постпечатной обработки:</label>
+    <label for="postprint_type">Выберите постпечатную обработку:</label>
     <div id="postprint-sections-wrap">
         {% for postprint_detail in postprint_details %}
         <div class="form-group d-flex">
