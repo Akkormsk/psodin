@@ -1,6 +1,36 @@
 {% extends 'Calculator/calculator.html' %}
 
 {% block content %}
-<h2>Широкоформатная печать</h2>
-<!-- Ваш контент для широкоформатной печати -->
+<h2>Калькулятор для широкоформатной печати</h2>
+<form method="post" action="{{ url_for('calculate_wide_format') }}">
+    <div class="form-group">
+        <label for="paper_type">Выберите бумагу:</label>
+        <select class="form-control" id="paper_type" name="paper_type">
+            {% for paper in papers %}
+            <option value="{{ paper.id }}">{{ paper.name }} - {{ paper.price }} руб/м²</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="print_type">Выберите тип печати:</label>
+        <select class="form-control" id="print_type" name="print_type">
+            {% for print in print_types %}
+            <option value="{{ print.id }}">{{ print.name }} - {{ print.price }} руб/м²</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="post_processing">Выберите постпечатную обработку:</label>
+        <select class="form-control" id="post_processing" name="post_processing">
+            {% for process in post_processings %}
+            <option value="{{ process.id }}">{{ process.name }} - {{ process.price }} руб/м²</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="hours">Количество часов работы:</label>
+        <input type="number" class="form-control" id="hours" name="hours" min="1" value="1">
+    </div>
+    <button type="submit" class="btn btn-primary">Рассчитать</button>
+</form>
 {% endblock %}

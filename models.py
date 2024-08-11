@@ -11,6 +11,7 @@ class PaperType(db.Model):
 
 
 class PaperTypeLarge(db.Model):
+    __tablename__ = 'paper_type_large'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
     price_per_unit = db.Column(db.Float, nullable=False)
@@ -24,6 +25,7 @@ class PrintType(db.Model):
 
 
 class PrintTypeLarge(db.Model):
+    __tablename__ = 'print_type_large'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
     price_per_unit_canon = db.Column(db.Float, nullable=False)
@@ -36,6 +38,7 @@ class PostPrintProcessing(db.Model):
 
 
 class PostPrintProcessingLarge(db.Model):
+    __tablename__ = 'post_print_processing_large'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
     price_per_unit = db.Column(db.Float, nullable=False)
@@ -59,3 +62,6 @@ class Order(db.Model):
     retail_price = db.Column(db.Float, nullable=False)
     cost_price = db.Column(db.Float, nullable=False)
     materials = db.Column(db.String(500), nullable=False)  # Указание длины
+
+
+

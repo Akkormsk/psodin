@@ -47,7 +47,6 @@ def sheet_printing():
     paper_types = db.session.execute(text("SELECT * FROM paper_type")).fetchall()
     print("Direct SQL Query Result:", paper_types)
 
-
     if request.method == 'POST':
 
         paper_type_ids = request.form.getlist('paper_type')
@@ -225,6 +224,36 @@ def logout():
 def show_orders():
     orders = Order.query.all()
     return render_template('Calculator/orders.html', orders=orders)
+
+
+@app.route('/wide_format_printing', methods=['GET', 'POST'])
+def calculate_wide_format():
+    if request.method == 'POST':
+        # Получаем данные из формы
+        paper_id = request.form.get('paper_type')
+        print_id = request.form.get('print_type')
+        process_id = request.form.get('post_processing')
+        hours = int(request.form.get('hours'))
+
+        # Получаем информацию из базы данных
+        paper = PaperTypeLarge.query.get(paper_id)
+        print_type = PrintTypeLarge.query.get(print_id)
+        post_processing = PostPrintProcessingLarge.query.get(process_id)
+
+        # Рассчитываем стоимость
+        total_cost = (paper.price_per_unit + print_type.price_per_unit_canon + post_processing.price_per_unit) * hours
+
+        # Отображаем результат
+        flash(f'Итоговая стоимость: {total_cost} руб.', 'success')
+        return redirect(url_for('calculate_wide_format'))
+
+    # Загружаем данные для формы
+    papers = PaperTypeLarge.query.all()
+    print_types = PrintTypeLarge.query.all()
+    post_processings = PostPrintProcessingLarge.query.all()
+
+    return render_template('wide_format_printing.html', papers=papers, print_types=print_types,
+                           post_processings=post_processings)
 
 
 if __name__ == '__main__':
