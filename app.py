@@ -188,7 +188,6 @@ def multi_page_printing():
     return render_template('Calculator/multi_page_printing.html')
 
 
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -223,57 +222,70 @@ def show_orders():
 def calculate_wide_format():
     if request.method == 'POST':
         # Получаем данные из формы
-        paper_details = request.form.getlist('paper_type')
-        print_details = request.form.getlist('print_type')
-        postprint_details = request.form.getlist('post_processing')
+        paper_ids = request.form.getlist('paper_type')
+        print_ids = request.form.getlist('print_type')
+        process_ids = request.form.getlist('post_processing')
         paper_quantities = request.form.getlist('paper_quantity')
         print_quantities = request.form.getlist('print_quantity')
-        postprint_quantities = request.form.getlist('postprint_quantity')
+        process_quantities = request.form.getlist('postprint_quantity')
         hours = int(request.form.get('hours', 0))
-
         materials_text = ""
 
-        # Выполняем расчет стоимости
-        total_cost = 0
-        for i in range(len(paper_details)):
-            paper = PaperTypeLarge.query.get(paper_details[i])
-            print_type = PrintTypeLarge.query.get(print_details[i])
-            post_processing = PostPrintProcessingLarge.query.get(postprint_details[i])
+        # Получаем информацию из базы данных
+        paper_details = [(PaperTypeLarge.query.get(paper_id), int(paper_quantity)) for paper_id, paper_quantity in
+                         zip(paper_ids, paper_quantities)]
+        print_details = [(PrintTypeLarge.query.get(print_id), int(print_quantity)) for print_id, print_quantity in
+                         zip(print_ids, print_quantities)]
+        postprint_details = [(PostPrintProcessingLarge.query.get(process_id), int(process_quantity)) for
+                             process_id, process_quantity in zip(process_ids, process_quantities)]
 
-            paper_cost = paper.price_per_unit * float(paper_quantities[i])
-            print_cost = print_type.price_per_unit_canon * float(print_quantities[i])
-            postprint_cost = post_processing.price_per_unit * float(postprint_quantities[i])
+        # Добавляем информацию о бумаге
+        for i, (paper, quantity) in enumerate(paper_details):
+            materials_text += f"Бумага {i + 1} - {paper.name} - {quantity} м² по цене {paper.price_per_unit}\r\n"
 
-            total_cost += paper_cost + print_cost + postprint_cost
-            materials_text += f"Бумага {i + 1} - {paper.name} - {paper_quantities[i]} шт по цене {paper.price_per_unit}\r\n" \
-                              f"Печать {i + 1} - {print_type.name} - {print_quantities[i]} шт по цене {print_type.price_per_unit_canon}\r\n" \
-                              f"Постпечатка {i + 1} - {post_processing.name} - {postprint_quantities[i]} шт по цене {post_processing.price_per_unit}\r\n"
+        # Добавляем информацию о печати
+        for i, (print_type, quantity) in enumerate(print_details):
+            materials_text += f"Печать {i + 1} - {print_type.name} - {quantity} м² по цене {print_type.price_per_unit_canon}\r\n"
 
-        work = Variables.query.get(1)
-        work_cost = hours * work.value if work else 0
-        materials_text += f"Работа - {hours} ч. по цене {work.value}\r\n"
+        # Добавляем информацию о постпечатной обработке
+        for i, (process, quantity) in enumerate(postprint_details):
+            materials_text += f"Постпечатка {i + 1} - {process.name} - {quantity} шт по цене {process.price_per_unit}\r\n"
 
-        # Возвращаем данные для отображения
-        return render_template('Calculator/wide_format_printing.html',
-                               papers=PaperTypeLarge.query.all(),
-                               print_types=PrintTypeLarge.query.all(),
-                               post_processings=PostPrintProcessingLarge.query.all(),
-                               total_cost=total_cost,
-                               paper_name=paper.name,
-                               paper_quantity=paper_quantities[0],
-                               print_name=print_type.name,
-                               print_quantity=print_quantities[0],
-                               post_processing_name=post_processing.name,
-                               postprint_quantity=postprint_quantities[0],
-                               hours=hours,
-                               work_cost=work_cost)
+        # Получаем стоимость часа работы
+        work_cost_variable = Variables.query.get(1)
+        hourly_rate = work_cost_variable.value if work_cost_variable else 0
+        work_cost = hours * hourly_rate
+        materials_text += f"Работа - {hours} ч. по цене {hourly_rate}\r\n"
 
-    # Показ формы для ввода данных
+        # Рассчитываем закупочную стоимость
+        total_cost = sum([detail[1] * detail[0].price_per_unit for detail in paper_details]) + \
+                     sum([detail[1] * detail[0].price_per_unit_canon for detail in print_details]) + \
+                     sum([detail[1] * detail[0].price_per_unit for detail in postprint_details]) + work_cost
+
+        # Получаем коэффициенты из базы данных
+        coefficient = Variables.query.get(2).value  # Коэффициент общий
+        regulars_discount = Variables.query.get(5).value  # Коэффициент скидки постоянников
+        partners_discount = Variables.query.get(6).value  # Коэффициент скидки партнеров
+        urgent_coefficient = Variables.query.get(4).value  # Коэффициент срочности
+
+        # Рассчитываем розничную цену и другие цены
+        retail_price = total_cost * coefficient
+        regulars_price = retail_price * regulars_discount
+        partners_price = retail_price * partners_discount
+        urgent_price = retail_price * urgent_coefficient
+
+        return render_template('Calculator/wide_format_printing.html', total_cost=total_cost, work_cost=work_cost,
+                               paper_details=paper_details, print_details=print_details,
+                               postprint_details=postprint_details, work_time=hours, retail_price=retail_price,
+                               regulars_price=regulars_price, partners_price=partners_price, urgent_price=urgent_price,
+                               papers=PaperTypeLarge.query.all(), print_types=PrintTypeLarge.query.all(),
+                               post_processings=PostPrintProcessingLarge.query.all(), materials_text=materials_text)
+
     return render_template('Calculator/wide_format_printing.html',
                            papers=PaperTypeLarge.query.all(),
                            print_types=PrintTypeLarge.query.all(),
-                           post_processings=PostPrintProcessingLarge.query.all())
-
+                           post_processings=PostPrintProcessingLarge.query.all(),
+                           paper_details=[], print_details=[], postprint_details=[])
 
 
 if __name__ == '__main__':

@@ -2,55 +2,99 @@
 
 {% block content %}
 <form id="calcForm" method="POST">
-    <h2>Широкоформатная печать (пока настраиваю)</h2>
+    <h2>Широкоформатная печать</h2>
 
     <label for="paper_type">Выберите бумагу:</label>
     <div id="paper-sections">
+        {% for paper_detail in paper_details %}
+        <div class="form-group d-flex">
+            <select class="form-control" name="paper_type" style="flex: 1;">
+                {% for paper in papers %}
+                <option value="{{ paper.id }}" {% if paper.id == paper_detail[0].id %}selected{% endif %}>
+                    {{ paper.name }} - {{ paper.price_per_unit }} руб/м²
+                </option>
+                {% endfor %}
+            </select>
+            <input type="number" class="form-control" name="paper_quantity" placeholder="Количество"
+                   style="width: 15%;" value="{{ paper_detail[1] }}" required>
+            <button type="button" class="calc-btn btn btn-light" onclick="addPaperSection()">+</button>
+        </div>
+        {% else %}
         <div class="form-group d-flex">
             <select class="form-control" name="paper_type" style="flex: 1;">
                 {% for paper in papers %}
                 <option value="{{ paper.id }}">{{ paper.name }} - {{ paper.price_per_unit }} руб/м²</option>
                 {% endfor %}
             </select>
-            <input type="number" class="form-control" name="paper_quantity" placeholder="Количество" style="width: 15%;"
-                   required>
+            <input type="number" class="form-control" name="paper_quantity" placeholder="Количество"
+                   style="width: 15%;" required>
             <button type="button" class="calc-btn btn btn-light" onclick="addPaperSection()">+</button>
         </div>
+        {% endfor %}
     </div>
 
     <label for="print_type">Выберите тип печати:</label>
     <div id="print_sections">
+        {% for print_detail in print_details %}
         <div class="form-group d-flex">
             <select class="form-control" name="print_type" style="flex: 1;">
                 {% for print in print_types %}
-                <option value="{{ print.id }}">{{ print.name }} - {{ print.price_per_unit }} руб/м²</option>
+                <option value="{{ print.id }}" {% if print.id == print_detail[0].id %}selected{% endif %}>
+                    {{ print.name }} - {{ print.price_per_unit_canon }} руб/м²
+                </option>
                 {% endfor %}
             </select>
-            <input type="number" class="form-control" name="print_quantity" placeholder="Количество" style="width: 15%;"
-                   required>
+            <input type="number" class="form-control" name="print_quantity" placeholder="Количество"
+                   style="width: 15%;" value="{{ print_detail[1] }}" required>
             <button type="button" class="calc-btn btn btn-light" onclick="addPrintSection()">+</button>
         </div>
+        {% else %}
+        <div class="form-group d-flex">
+            <select class="form-control" name="print_type" style="flex: 1;">
+                {% for print in print_types %}
+                <option value="{{ print.id }}">{{ print.name }} - {{ print.price_per_unit_canon }} руб/м²</option>
+                {% endfor %}
+            </select>
+            <input type="number" class="form-control" name="print_quantity" placeholder="Количество"
+                   style="width: 15%;" required>
+            <button type="button" class="calc-btn btn btn-light" onclick="addPrintSection()">+</button>
+        </div>
+        {% endfor %}
     </div>
 
     <label for="postprint_type">Выберите постпечатную обработку:</label>
     <div id="postprint-sections-wrap">
+        {% for postprint_detail in postprint_details %}
         <div class="form-group d-flex">
             <select class="form-control" name="post_processing" style="flex: 1;">
                 {% for process in post_processings %}
-                <option value="{{ process.id }}">{{ process.name }} - {{ process.price_per_unit }} руб/м²</option>
+                <option value="{{ process.id }}" {% if process.id == postprint_detail[0].id %}selected{% endif %}>
+                    {{ process.name }} - {{ process.price_per_unit }} руб/шт
+                </option>
+                {% endfor %}
+            </select>
+            <input type="number" class="form-control" name="postprint_quantity" placeholder="Количество"
+                   style="width: 15%;" value="{{ postprint_detail[1] }}" required>
+            <button type="button" class="calc-btn btn btn-light" onclick="addPostprintSection()">+</button>
+        </div>
+        {% else %}
+        <div class="form-group d-flex">
+            <select class="form-control" name="post_processing" style="flex: 1;">
+                {% for process in post_processings %}
+                <option value="{{ process.id }}">{{ process.name }} - {{ process.price_per_unit }} руб/шт</option>
                 {% endfor %}
             </select>
             <input type="number" class="form-control" name="postprint_quantity" placeholder="Количество"
                    style="width: 15%;" required>
             <button type="button" class="calc-btn btn btn-light" onclick="addPostprintSection()">+</button>
         </div>
+        {% endfor %}
     </div>
 
     <div class="form-group">
         <label for="work_time">Время работы (часы):</label>
         <input type="number" class="form-control" id="work_time" name="hours" placeholder="Количество"
                style="width: 20%;" value="{{ work_time }}" required step="0.5" min="0">
-
     </div>
 
     <div class="form-group">
@@ -59,6 +103,7 @@
         <button type="button" class="btn btn-success ml-2" onclick="saveOrder()">Записать</button>
     </div>
 </form>
+
 
 <!-- Templates for dynamic sections -->
 <template id="paper-section-template">
@@ -78,7 +123,7 @@
     <div class="form-group d-flex">
         <select class="form-control" name="print_type" style="flex: 1;">
             {% for print in print_types %}
-            <option value="{{ print.id }}">{{ print.name }} - {{ print.price_per_unit }} руб/м²</option>
+            <option value="{{ print.id }}">{{ print.name }} - {{ print.price_per_unit_canon }} руб/м²</option>
             {% endfor %}
         </select>
         <input type="number" class="form-control" name="print_quantity" placeholder="Количество" style="width: 15%;"
@@ -91,7 +136,7 @@
     <div class="form-group d-flex">
         <select class="form-control" name="post_processing" style="flex: 1;">
             {% for process in post_processings %}
-            <option value="{{ process.id }}">{{ process.name }} - {{ process.price_per_unit }} руб/м²</option>
+            <option value="{{ process.id }}">{{ process.name }} - {{ process.price_per_unit }} руб/шт</option>
             {% endfor %}
         </select>
         <input type="number" class="form-control" name="postprint_quantity" placeholder="Количество" style="width: 15%;"
@@ -100,17 +145,55 @@
     </div>
 </template>
 
+<!-- Display calculated results -->
 {% if total_cost %}
 <div class="mt-4 p-3 bg-custom-light">
     <h3>
-        Итоговая стоимость: {{ total_cost }} руб
+        Розничная цена: {{ retail_price }} руб
+        <span class="small-text">(Прибыль - {{ (retail_price - total_cost) | round(2) }} руб. {{ ((retail_price - total_cost) * 100 / retail_price) | round(2) }}%)</span>
     </h3>
     <ul>
-        <li>Бумага: {{ paper_name }} - {{ paper_quantity }} м²</li>
-        <li>Печать: {{ print_name }} - {{ print_quantity }} м²</li>
-        <li>Постпечатная обработка: {{ post_processing_name }} - {{ postprint_quantity }} м²</li>
-        <li>Часы работы: {{ hours }} на сумму {{ work_cost }} руб</li>
+        <li><b>Цена для постоянников:</b> {{ regulars_price }} руб. (Прибыль - {{ (regulars_price - total_cost) |
+            round(2) }} руб., {{ ((regulars_price - total_cost) * 100 / regulars_price) | round(2) }}%)
+        </li>
+        <li><b>Цена для партнёров:</b> {{ partners_price }} руб. (Прибыль - {{ (partners_price - total_cost) | round(2)
+            }} руб., {{ ((partners_price - total_cost) * 100 / partners_price) | round(2) }}%)
+        </li>
+        <li><b>Цена со срочностью:</b> {{ urgent_price }} руб. (Прибыль - {{ (urgent_price - total_cost) | round(2) }}
+            руб., {{ ((urgent_price - total_cost) * 100 / urgent_price) | round(2) }}%)
+        </li>
+    </ul>
+    <h5>Закупочная стоимость: {{ total_cost }} руб</h5>
+    <ul>
+        {% for paper_detail in paper_details %}
+        <li>Бумага ({{ loop.index }}): {{ paper_detail[0].name }}, количество: {{ paper_detail[1] }} на сумму {{
+            (paper_detail[1] * paper_detail[0].price_per_unit) | round(2) }} руб.
+        </li>
+        {% endfor %}
+        {% for print_detail in print_details %}
+        <li>Печать ({{ loop.index }}): {{ print_detail[0].name }}, количество: {{ print_detail[1] }} на сумму {{
+            (print_detail[1] * print_detail[0].price_per_unit_canon) | round(2) }} руб.
+        </li>
+        {% endfor %}
+        {% for postprint_detail in postprint_details %}
+        <li>Постпечатка ({{ loop.index }}): {{ postprint_detail[0].name }}, количество: {{
+            postprint_detail[1] }} на сумму {{ postprint_detail[1] * postprint_detail[0].price_per_unit | round(2) }}
+            руб.
+        </li>
+        {% endfor %}
+        <li>Работа: {{ work_time }} часов на сумму {{ work_cost }} руб.</li>
     </ul>
 </div>
 {% endif %}
+
+<!-- Hidden fields for form submission -->
+<input type="hidden" id="total_cost" name="total_cost" value="{{ total_cost }}">
+<input type="hidden" id="retail_price" name="retail_price" value="{{ retail_price }}">
+<input type="hidden" id="materials" name="materials" value="{{ materials_text }}">
+
+<!-- Modal for Order ID -->
+{% include 'Calculator/order_modal.html' %}
+
+
+
 {% endblock %}

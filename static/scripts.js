@@ -69,12 +69,12 @@ function removeSection(button) {
 }
 
 function resetForm() {
-    window.location.href = "/sheet_printing";
+    window.location.reload();  // Reload the page to reset the form
 }
 
 function saveOrder() {
-    const totalCost = document.getElementById('total_cost').value;
-    const retailPrice = document.getElementById('retail_price').value;
+    const totalCost = document.querySelector('input[name="total_cost"]').value;
+    const retailPrice = document.querySelector('input[name="retail_price"]').value;
 
     if (!totalCost || !retailPrice) {
         alert('Сначала необходимо произвести расчет.');
@@ -92,15 +92,12 @@ function confirmOrderId() {
         const form = document.getElementById('calcForm');
         const formData = new FormData(form);
 
-        // Собираем данные о материалах и добавляем в formData
-//        const materials = gatherMaterials();
         formData.append('order_id', orderId);
 
-
         // Добавляем total_cost и retail_price из скрытых полей
-        const totalCost = document.getElementById('total_cost').value;
-        const retailPrice = document.getElementById('retail_price').value;
-        const materials = document.getElementById('materials').value;
+        const totalCost = document.querySelector('input[name="total_cost"]').value;
+        const retailPrice = document.querySelector('input[name="retail_price"]').value;
+        const materials = document.querySelector('input[name="materials"]').value;
         formData.append('total_cost', totalCost);
         formData.append('retail_price', retailPrice);
         formData.append('materials', materials);
