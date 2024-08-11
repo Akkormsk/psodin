@@ -3,10 +3,10 @@
 {% block nav_content %}
 <ul class="navbar-nav">
     <li class="nav-item {% if request.path == url_for('sheet_printing_func') or request.path == url_for('calculator') %}active{% endif %}">
-        <a class="nav-link" href="{{ url_for('sheet_printing') }}">Листовая печать</a>
+        <a class="nav-link" href="{{ url_for('sheet_printing_func') }}">Листовая печать</a>
     </li>
     <li class="nav-item {% if request.path == url_for('calculate_wide_format') %}active{% endif %}">
-        <a class="nav-link" href="{{ url_for('wide_format_printing') }}">Широкоформатная печать</a>
+        <a class="nav-link" href="{{ url_for('calculate_wide_format') }}">Широкоформатная печать</a>
     </li>
     <li class="nav-item {% if request.path == url_for('show_orders') %}active{% endif %}">
         <a class="nav-link" href="{{ url_for('show_orders') }}">Заказы</a>

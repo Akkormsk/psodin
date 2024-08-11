@@ -1,36 +1,116 @@
 {% extends 'Calculator/calculator.html' %}
 
 {% block content %}
-<form method="post" action="{{ url_for('calculate_wide_format') }}">
-    <h2>Широкоформатная печать</h2>
-    <div class="form-group">
-        <label for="paper_type">Выберите бумагу:</label>
-        <select class="form-control" id="paper_type" name="paper_type">
-            {% for paper in papers %}
-            <option value="{{ paper.id }}">{{ paper.name }} - {{ paper.price }} руб/м²</option>
-            {% endfor %}
-        </select>
+<form id="calcForm" method="POST">
+    <h2>Широкоформатная печать (ока настраиваю)</h2>
+
+    <label for="paper_type">Выберите бумагу:</label>
+    <div id="paper-sections">
+        <div class="form-group d-flex">
+            <select class="form-control" name="paper_type" style="flex: 1;">
+                {% for paper in papers %}
+                <option value="{{ paper.id }}">{{ paper.name }} - {{ paper.price_per_unit }} руб/м²</option>
+                {% endfor %}
+            </select>
+            <input type="number" class="form-control" name="paper_quantity" placeholder="Количество" style="width: 15%;"
+                   required>
+            <button type="button" class="calc-btn btn btn-light" onclick="addPaperSection()">+</button>
+        </div>
     </div>
-    <div class="form-group">
-        <label for="print_type">Выберите тип печати:</label>
-        <select class="form-control" id="print_type" name="print_type">
-            {% for print in print_types %}
-            <option value="{{ print.id }}">{{ print.name }} - {{ print.price }} руб/м²</option>
-            {% endfor %}
-        </select>
+
+    <label for="print_type">Выберите тип печати:</label>
+    <div id="print_sections">
+        <div class="form-group d-flex">
+            <select class="form-control" name="print_type" style="flex: 1;">
+                {% for print in print_types %}
+                <option value="{{ print.id }}">{{ print.name }} - {{ print.price_per_unit }} руб/м²</option>
+                {% endfor %}
+            </select>
+            <input type="number" class="form-control" name="print_quantity" placeholder="Количество" style="width: 15%;"
+                   required>
+            <button type="button" class="calc-btn btn btn-light" onclick="addPrintSection()">+</button>
+        </div>
     </div>
-    <div class="form-group">
-        <label for="post_processing">Выберите постпечатную обработку:</label>
-        <select class="form-control" id="post_processing" name="post_processing">
-            {% for process in post_processings %}
-            <option value="{{ process.id }}">{{ process.name }} - {{ process.price }} руб/м²</option>
-            {% endfor %}
-        </select>
+
+    <label for="postprint_type">Выберите постпечатную обработку:</label>
+    <div id="postprint-sections-wrap">
+        <div class="form-group d-flex">
+            <select class="form-control" name="post_processing" style="flex: 1;">
+                {% for process in post_processings %}
+                <option value="{{ process.id }}">{{ process.name }} - {{ process.price_per_unit }} руб/м²</option>
+                {% endfor %}
+            </select>
+            <input type="number" class="form-control" name="postprint_quantity" placeholder="Количество"
+                   style="width: 15%;" required>
+            <button type="button" class="calc-btn btn btn-light" onclick="addPostprintSection()">+</button>
+        </div>
     </div>
+
     <div class="form-group">
-        <label for="hours">Количество часов работы:</label>
-        <input type="number" class="form-control" id="hours" name="hours" min="1" value="1">
+        <label for="work_time">Время работы (часы):</label>
+        <input type="number" class="form-control" id="work_time" name="hours" placeholder="Количество"
+               style="width: 20%;" value="{{ work_time }}" required step="0.5" min="0">
+
     </div>
-    <button type="submit" class="btn btn-primary">Рассчитать</button>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Рассчитать</button>
+        <button type="button" class="btn btn-light ml-2" onclick="resetForm()">Сбросить</button>
+        <button type="button" class="btn btn-success ml-2" onclick="saveOrder()">Записать</button>
+    </div>
 </form>
+
+<!-- Templates for dynamic sections -->
+<template id="paper-section-template">
+    <div class="form-group d-flex">
+        <select class="form-control" name="paper_type" style="flex: 1;">
+            {% for paper in papers %}
+            <option value="{{ paper.id }}">{{ paper.name }} - {{ paper.price_per_unit }} руб/м²</option>
+            {% endfor %}
+        </select>
+        <input type="number" class="form-control" name="paper_quantity" placeholder="Количество" style="width: 15%;"
+               required>
+        <button type="button" class="calc-btn btn btn-light" onclick="removeSection(this)">-</button>
+    </div>
+</template>
+
+<template id="print-section-template">
+    <div class="form-group d-flex">
+        <select class="form-control" name="print_type" style="flex: 1;">
+            {% for print in print_types %}
+            <option value="{{ print.id }}">{{ print.name }} - {{ print.price_per_unit }} руб/м²</option>
+            {% endfor %}
+        </select>
+        <input type="number" class="form-control" name="print_quantity" placeholder="Количество" style="width: 15%;"
+               required>
+        <button type="button" class="calc-btn btn btn-light" onclick="removeSection(this)">-</button>
+    </div>
+</template>
+
+<template id="postprint-section-template">
+    <div class="form-group d-flex">
+        <select class="form-control" name="post_processing" style="flex: 1;">
+            {% for process in post_processings %}
+            <option value="{{ process.id }}">{{ process.name }} - {{ process.price_per_unit }} руб/м²</option>
+            {% endfor %}
+        </select>
+        <input type="number" class="form-control" name="postprint_quantity" placeholder="Количество" style="width: 15%;"
+               required>
+        <button type="button" class="calc-btn btn btn-light" onclick="removeSection(this)">-</button>
+    </div>
+</template>
+
+{% if total_cost %}
+<div class="mt-4 p-3 bg-custom-light">
+    <h3>
+        Итоговая стоимость: {{ total_cost }} руб
+    </h3>
+    <ul>
+        <li>Бумага: {{ paper_name }} - {{ paper_quantity }} м²</li>
+        <li>Печать: {{ print_name }} - {{ print_quantity }} м²</li>
+        <li>Постпечатная обработка: {{ post_processing_name }} - {{ postprint_quantity }} м²</li>
+        <li>Часы работы: {{ hours }} на сумму {{ work_cost }} руб</li>
+    </ul>
+</div>
+{% endif %}
 {% endblock %}
