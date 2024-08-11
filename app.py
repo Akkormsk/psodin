@@ -5,6 +5,11 @@ from models import *
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
 from admin import create_admin
 from flask_session import Session
+import logging
+from sqlalchemy import text
+
+logging.basicConfig()
+logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -37,7 +42,14 @@ def index():
 @app.route('/calculator/sheet_printing', methods=['GET', 'POST'])
 @app.route('/sheet_printing', methods=['GET', 'POST'])
 def sheet_printing():
+    print('hi')
+    # Проверка содержимого таблицы PaperType
+    paper_types = db.session.execute(text("SELECT * FROM paper_type")).fetchall()
+    print("Direct SQL Query Result:", paper_types)
+
+
     if request.method == 'POST':
+
         paper_type_ids = request.form.getlist('paper_type')
         paper_quantities = request.form.getlist('paper_quantity')
         machine_types = request.form.getlist('machine_type')
