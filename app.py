@@ -41,12 +41,8 @@ def index():
 
 @app.route('/calculator/sheet_printing', methods=['GET', 'POST'])
 @app.route('/sheet_printing', methods=['GET', 'POST'])
-def sheet_printing():
-    print('hi')
-    # Проверка содержимого таблицы PaperType
-    paper_types = db.session.execute(text("SELECT * FROM paper_type")).fetchall()
-    print("Direct SQL Query Result:", paper_types)
-
+def sheet_printing_func():
+    print('hi1')
     if request.method == 'POST':
 
         paper_type_ids = request.form.getlist('paper_type')
@@ -226,8 +222,10 @@ def show_orders():
     return render_template('Calculator/orders.html', orders=orders)
 
 
+@app.route('/calculator/wide_format_printing', methods=['GET', 'POST'])
 @app.route('/wide_format_printing', methods=['GET', 'POST'])
 def calculate_wide_format():
+    print('hi2')
     if request.method == 'POST':
         # Получаем данные из формы
         paper_id = request.form.get('paper_type')
@@ -240,20 +238,24 @@ def calculate_wide_format():
         print_type = PrintTypeLarge.query.get(print_id)
         post_processing = PostPrintProcessingLarge.query.get(process_id)
 
+        # Аккумулируем информацию
+        materials_text = f"Бумага: {paper.name}, Печать: {print_type.name}, Обработка: {post_processing.name}"
+
         # Рассчитываем стоимость
         total_cost = (paper.price_per_unit + print_type.price_per_unit_canon + post_processing.price_per_unit) * hours
 
         # Отображаем результат
-        flash(f'Итоговая стоимость: {total_cost} руб.', 'success')
-        return redirect(url_for('calculate_wide_format'))
+        flash(f'Материалы: {materials_text}\nИтоговая стоимость: {total_cost} руб.', 'success')
+        return render_template('Calculator/wide_format_printing.html', total_cost=total_cost,
+                               materials_text=materials_text,
+                               papers=PaperTypeLarge.query.all(),
+                               print_types=PrintTypeLarge.query.all(),
+                               post_processings=PostPrintProcessingLarge.query.all())
 
-    # Загружаем данные для формы
-    papers = PaperTypeLarge.query.all()
-    print_types = PrintTypeLarge.query.all()
-    post_processings = PostPrintProcessingLarge.query.all()
-
-    return render_template('wide_format_printing.html', papers=papers, print_types=print_types,
-                           post_processings=post_processings)
+    return render_template('Calculator/wide_format_printing.html',
+                           papers=PaperTypeLarge.query.all(),
+                           print_types=PrintTypeLarge.query.all(),
+                           post_processings=PostPrintProcessingLarge.query.all())
 
 
 if __name__ == '__main__':

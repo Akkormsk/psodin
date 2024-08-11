@@ -1,8 +1,8 @@
 {% extends 'Calculator/calculator.html' %}
 
 {% block content %}
-<h2>Калькулятор для широкоформатной печати</h2>
 <form method="post" action="{{ url_for('calculate_wide_format') }}">
+    <h2>Широкоформатная печать</h2>
     <div class="form-group">
         <label for="paper_type">Выберите бумагу:</label>
         <select class="form-control" id="paper_type" name="paper_type">
