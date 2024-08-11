@@ -81,3 +81,9 @@ h2 {
 .materials-cell {
     white-space: pre-line;  /* Отображение переноса строк */
 }
+
+.icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+}

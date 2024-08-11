@@ -5,25 +5,34 @@
 <div class="row">
     <div class="col-md-4">
         <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Калькулятор</h5>
-                <a href="{{ url_for('sheet_printing') }}" class="btn btn-primary">Перейти</a>
+            <div class="card-body d-flex justify-content-between">
+                <div>
+                    <h5 class="card-title">Калькулятор</h5>
+                    <a href="{{ url_for('sheet_printing') }}" class="btn btn-primary">Перейти</a>
+                </div>
+                <img src="{{ url_for('static', filename='calculator_2374367.png') }}" alt="Calculator Icon" style="width: 30px; height: 30px;">
             </div>
         </div>
     </div>
     <div class="col-md-4">
         <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Касса</h5>
-                <a href="#" class="btn btn-secondary">Перейти</a>
+            <div class="card-body d-flex justify-content-between">
+                <div>
+                    <h5 class="card-title">Касса</h5>
+                    <a href="#" class="btn btn-secondary">Перейти</a>
+                </div>
+                <img src="{{ url_for('static', filename='cashier-machine_1063097.png') }}" alt="Cashier Icon" style="width: 30px; height: 30px;">
             </div>
         </div>
     </div>
     <div class="col-md-4">
         <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Учет</h5>
-                <a href="#" class="btn btn-secondary">Перейти</a>
+            <div class="card-body d-flex justify-content-between">
+                <div>
+                    <h5 class="card-title">Учет</h5>
+                    <a href="#" class="btn btn-secondary">Перейти</a>
+                </div>
+                <img src="{{ url_for('static', filename='open-book_2876829.png') }}" alt="Bookkeeping Icon" style="width: 30px; height: 30px;">
             </div>
         </div>
     </div>
