@@ -3,13 +3,14 @@
 {% block content %}
 <form id="calcForm" method="POST">
     <h2>Цифровая печать</h2>
+
     <label for="paper_type">Выберите бумагу:</label>
     <div id="paper-sections">
         {% for paper_detail in paper_details %}
         <div class="form-group d-flex">
             <select class="form-control" id="paper_type" name="paper_type" style="flex: 1;">
                 {% for paper in paper_types %}
-                <option value="{{ paper.id }}" {% if paper.id== paper_detail[0].id %}selected{% endif %}>
+                <option value="{{ paper.id }}" {% if paper.id == paper_detail[0].id %}selected{% endif %}>
                     {{ paper.name }} - {{ paper.price_per_unit }} руб/лист
                 </option>
                 {% endfor %}
@@ -27,17 +28,16 @@
         <div class="d-flex form-group">
             <select class="form-control" id="machine_type_{{ loop.index }}" name="machine_type"
                     onchange="updatePrintOptions(this.value, this)" style="width: 20%">
-                <option value="xerox" {% if print_detail[0]=='xerox' %} selected {% endif %}>Xerox</option>
-                <option value="konica" {% if print_detail[0]=='konica' %} selected {% endif %}>Konica</option>
+                <option value="xerox" {% if print_detail[0] == 'xerox' %} selected {% endif %}>Xerox</option>
+                <option value="konica" {% if print_detail[0] == 'konica' %} selected {% endif %}>Konica</option>
             </select>
             <select class="form-control" id="print-content-{{ loop.index }}" name="print_type"
                     style="flex: 1; margin-right: 10px;">
                 {% for print in print_types %}
                 <option value="{{ print.id }}" data-xerox="{{ print.price_per_unit_xerox }}"
                         data-konica="{{ print.price_per_unit_konica }}"
-                        {% if print.id== print_detail[1].id %} selected {% endif %}>
-                    {{ print.name }} - {{ print.price_per_unit_xerox if print_detail[0] == 'xerox' else
-                    print.price_per_unit_konica }} руб/лист
+                        {% if print.id == print_detail[1].id %} selected {% endif %}>
+                    {{ print.name }} - {{ print.price_per_unit_xerox if print_detail[0] == 'xerox' else print.price_per_unit_konica }} руб/лист
                 </option>
                 {% endfor %}
             </select>
@@ -55,7 +55,7 @@
         <div class="form-group d-flex">
             <select class="form-control" id="postprint_type" name="postprint_type" style="flex: 1;">
                 {% for postprint in postprint_types %}
-                <option value="{{ postprint.id }}" {% if postprint.id== postprint_detail[0].id %}selected{% endif %}>
+                <option value="{{ postprint.id }}" {% if postprint.id == postprint_detail[0].id %}selected{% endif %}>
                     {{ postprint.name }} - {{ postprint.price_per_unit }} руб/единица
                 </option>
                 {% endfor %}
@@ -183,7 +183,4 @@
 <!-- Modal для ввода ID заказа -->
 {% include 'Calculator/order_modal.html' %}
 
-
 {% endblock %}
-
-
