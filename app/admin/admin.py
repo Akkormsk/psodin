@@ -1,54 +1,46 @@
-from flask import redirect, url_for, request, g, current_app
+from flask import redirect, url_for, request, session
 from flask_admin import Admin, AdminIndexView, expose, BaseView
 from flask_admin.menu import MenuLink
 from flask_admin.contrib.sqla import ModelView
-from flask_login import current_user, login_required
 from markupsafe import Markup
-from sqlalchemy import event, Engine
+
 
 from app.models import *
 
 
 class MyModelView(ModelView):
     def is_accessible(self):
-        return current_user.is_authenticated
+        return session.get('authenticated')  # Проверка аутентификации
 
     def inaccessible_callback(self, name, **kwargs):
-        # Redirect to login page if user doesn't have access
-        return redirect(url_for('login', next=request.url))
+        return redirect(url_for('auth.login', next=request.url))
 
 
 class MyAdminIndexView(AdminIndexView):
     @expose('/')
-    @login_required
     def index(self):
+        if not session.get('authenticated'):
+            return redirect(url_for('auth.login', next=request.url))
         return super(MyAdminIndexView, self).index()
-
-    def inaccessible_callback(self, name, **kwargs):
-        # Redirect to login page if user doesn't have access
-        return redirect(url_for('login', next=request.url))
 
 
 class CustomModelView(ModelView):
     def is_accessible(self):
-        return current_user.is_authenticated
+        return True
 
     column_display_pk = True  # Показывать первичный ключ
 
-    # Отключаем отображение в меню
     def is_visible(self):
         return False
 
 
 class OrderAdminView(ModelView):
     def is_accessible(self):
-        return current_user.is_authenticated
+        return True
 
-    column_display_pk = True  # Показывать первичный ключ
-    # Настройка видимых столбцов
+    column_display_pk = True
     column_list = ('id', 'retail_price', 'cost_price', 'materials')
 
-    # Настройка отображения столбца materials с переносами строк
     def _list_materials(view, context, model, name):
         return Markup(model.materials.replace('\n', '<br>'))
 
@@ -69,8 +61,7 @@ def create_admin(app):
     admin = Admin(app, name="PS#1 admin", index_view=MyAdminIndexView(name='Главная'), template_mode='bootstrap4')
     admin.add_view(CustomModelView(PaperType, db.session, name='Бумага', endpoint='papertype'))
     admin.add_view(CustomModelView(PrintType, db.session, name='Печать', endpoint='printtype'))
-    admin.add_view(CustomModelView(PostPrintProcessing, db.session, name='Постпечатка',
-                                   endpoint='postprintprocessing'))
+    admin.add_view(CustomModelView(PostPrintProcessing, db.session, name='Постпечатка', endpoint='postprintprocessing'))
     admin.add_view(CustomModelView(Embossing, db.session, name='Тиснение', endpoint='embossing'))
     admin.add_view(CustomModelView(Variables, db.session, name='Переменные', endpoint='variables'))
     admin.add_view(CustomModelView(PaperTypeLarge, db.session, name='Бумага шир', endpoint='papertypelarge'))
@@ -82,7 +73,3 @@ def create_admin(app):
     admin.add_link(MenuLink(name='Выход', category='', url='/admin/logout'))
     return admin
 
-
-@event.listens_for(Engine, "before_cursor_execute")
-def before_cursor_execute(conn, cursor, statement, parameters, context, executemany):
-    current_app.logger.info(f"User: {g.user}, Executing: {statement}, Parameters: {parameters}")

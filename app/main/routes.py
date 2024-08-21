@@ -75,7 +75,7 @@ def sheet_printing_func():
         partners_price = round(retail_price * partners_discount.value, 2)
         urgent_price = round(retail_price * urgency.value, 2)
 
-        current_app.logger.info(f'Print details: {print_details}')
+        # current_app.logger.info(f'Print details: {print_details}')
 
         return render_template('Calculator/sheet_printing.html', total_cost=total_cost,
                                paper_details=paper_details, print_details=print_details,
@@ -124,7 +124,7 @@ def update_print_options():
 @main_bp.route('/save_order', methods=['POST'])
 def save_order():
     try:
-        current_app.logger.info(f"Received form data: {request.form}")
+        # current_app.logger.info(f"Received form data: {request.form}")
         order_id = request.form.get('order_id')
         retail_price = request.form.get('retail_price')
         cost_price = request.form.get('total_cost')
@@ -133,8 +133,8 @@ def save_order():
         if not order_id or not retail_price or not cost_price or not materials:
             raise ValueError("Missing one or more required fields: order_id, retail_price, cost_price, materials")
 
-        current_app.logger.info(
-            f"Received data - Order ID: {order_id}, Retail Price: {retail_price}, Cost Price: {cost_price}, Materials: {materials}")
+        # current_app.logger.info(
+        #     f"Received data - Order ID: {order_id}, Retail Price: {retail_price}, Cost Price: {cost_price}, Materials: {materials}")
 
         order = Order(id=order_id, retail_price=float(retail_price), cost_price=float(cost_price), materials=materials)
         db.session.add(order)
@@ -142,20 +142,20 @@ def save_order():
 
         return jsonify({'status': 'success'}), 200
     except Exception as e:
-        current_app.logger.error(f"Error: {str(e)}")
+        # current_app.logger.error(f"Error: {str(e)}")
         return jsonify({'status': 'error', 'message': str(e)}), 400
 
 
 @main_bp.route('/multi_page_printing')
 def multi_page_printing():
-    current_app.logger.info('Multi page printing calculator accessed')
+    # current_app.logger.info('Multi page printing calculator accessed')
     return render_template('Calculator/multi_page_printing.html')
 
 
 @main_bp.route('/orders')
 @main_bp.route('/calculator/orders')
 def show_orders():
-    current_app.logger.info('Orders page accessed')
+    # current_app.logger.info('Orders page accessed')
     orders = Order.query.all()
     return render_template('Calculator/orders.html', orders=orders)
 
@@ -163,7 +163,7 @@ def show_orders():
 @main_bp.route('/calculator/wide_format_printing', methods=['GET', 'POST'])
 @main_bp.route('/wide_format_printing', methods=['GET', 'POST'])
 def calculate_wide_format():
-    current_app.logger.info('Wide format printing calculator accessed')
+    # current_app.logger.info('Wide format printing calculator accessed')
     if request.method == 'POST':
         paper_ids = request.form.getlist('paper_type')
         print_ids = request.form.getlist('print_type')
@@ -209,7 +209,7 @@ def calculate_wide_format():
         partners_price = retail_price * partners_discount
         urgent_price = retail_price * urgent_coefficient
 
-        current_app.logger.info(f'Retail Price: {retail_price}, Total Cost: {total_cost}')
+        # current_app.logger.info(f'Retail Price: {retail_price}, Total Cost: {total_cost}')
 
         return render_template('Calculator/wide_format_printing.html', total_cost=total_cost, work_cost=work_cost,
                                paper_details=paper_details, print_details=print_details,
