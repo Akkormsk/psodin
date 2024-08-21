@@ -4,7 +4,7 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_session import Session
 import uuid
-from .models import db, User  # Импортируем User из models
+from .models import *
 from .auth.routes import auth_bp
 from .main.routes import main_bp
 from .logging_config import configure_logging
@@ -61,4 +61,3 @@ def log_user_action():
 if __name__ == '__main__':
     with app.app_context():
         app.run()
-        pass
