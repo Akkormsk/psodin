@@ -60,4 +60,4 @@ def log_user_action():
 # Основной файл для запуска приложения
 if __name__ == '__main__':
     with app.app_context():
-        app.run(host="0.0.0.0", port=3060)
+        app.run()
