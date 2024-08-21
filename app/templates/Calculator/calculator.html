@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+
+{% block nav_content %}
+<ul class="navbar-nav">
+    <li class="nav-item {% if request.path == url_for('main.sheet_printing_func') %}active{% endif %}">
+        <a class="nav-link" href="{{ url_for('main.sheet_printing_func') }}">Цифровая печать</a>
+    </li>
+    <li class="nav-item {% if request.path == url_for('main.calculate_wide_format') %}active{% endif %}">
+        <a class="nav-link" href="{{ url_for('main.calculate_wide_format') }}">Широкоформатная печать</a>
+    </li>
+    <li class="nav-item {% if request.path == url_for('main.show_orders') %}active{% endif %}">
+        <a class="nav-link" href="{{ url_for('main.show_orders') }}">Заказы</a>
+    </li>
+</ul>
+{% endblock %}
+
+{% block content %}{% endblock %}

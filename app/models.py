@@ -1,3 +1,4 @@
+from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -64,4 +65,5 @@ class Order(db.Model):
     materials = db.Column(db.String(500), nullable=False)  # Указание длины
 
 
-
+class User(UserMixin):
+    id = 1  # Поскольку мы не используем базу данных для пользователей

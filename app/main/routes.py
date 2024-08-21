@@ -1,50 +1,20 @@
-from flask import Flask, render_template, redirect, url_for, request, flash, jsonify
-from flask_migrate import Migrate
-from config import Config
-from models import *
-from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
-from admin import create_admin
-from flask_session import Session
-import logging
-from sqlalchemy import text
+from flask import Blueprint, render_template, request, jsonify, current_app
+from ..models import *
 
-logging.basicConfig()
-logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
-
-app = Flask(__name__)
-app.config.from_object(Config)
-db.init_app(app)
-migrate = Migrate(app, db)
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = 'login'
-Session(app)
+main_bp = Blueprint('main', __name__)
 
 
-class User(UserMixin):
-    id = 1  # Поскольку мы не используем базу данных для пользователей
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User()
-
-
-admin = create_admin(app)
-
-
-@app.route('/')
-@app.route('/home')
+@main_bp.route('/')
+@main_bp.route('/home')
 def index():
     return render_template('index.html')
 
 
-@app.route('/calculator/sheet_printing', methods=['GET', 'POST'])
-@app.route('/sheet_printing', methods=['GET', 'POST'])
+@main_bp.route('/calculator/sheet_printing', methods=['GET', 'POST'])
+@main_bp.route('/sheet_printing', methods=['GET', 'POST'])
+@main_bp.route('/calculator', methods=['GET', 'POST'])
 def sheet_printing_func():
-    print('hi1')
     if request.method == 'POST':
-
         paper_type_ids = request.form.getlist('paper_type')
         paper_quantities = request.form.getlist('paper_quantity')
         machine_types = request.form.getlist('machine_type')
@@ -105,7 +75,7 @@ def sheet_printing_func():
         partners_price = round(retail_price * partners_discount.value, 2)
         urgent_price = round(retail_price * urgency.value, 2)
 
-        print(print_details)
+        current_app.logger.info(f'Print details: {print_details}')
 
         return render_template('Calculator/sheet_printing.html', total_cost=total_cost,
                                paper_details=paper_details, print_details=print_details,
@@ -115,7 +85,8 @@ def sheet_printing_func():
                                postprint_types=PostPrintProcessing.query.all(), work_cost=work_cost,
                                print_cost=print_cost, retail_price=retail_price,
                                regulars_price=regulars_price, partners_price=partners_price,
-                               urgent_price=urgent_price, machine_type=machine_types[0], materials_text=materials_text)
+                               urgent_price=urgent_price, machine_type=machine_types[0],
+                               materials_text=materials_text)
 
     return render_template('Calculator/sheet_printing.html',
                            paper_types=PaperType.query.all(),
@@ -127,35 +98,7 @@ def sheet_printing_func():
                            postprint_details=[(0,)])  # Default values for initial load
 
 
-@app.route('/save_order', methods=['POST'])
-def save_order():
-    try:
-        # Логирование всех данных, полученных в запросе
-        app.logger.info(f"Received form data: {request.form}")
-
-        order_id = request.form.get('order_id')
-        retail_price = request.form.get('retail_price')
-        cost_price = request.form.get('total_cost')
-        materials = request.form.get('materials')
-
-        if not order_id or not retail_price or not cost_price or not materials:
-            raise ValueError("Missing one or more required fields: order_id, retail_price, cost_price, materials")
-
-        # Логирование полученных данных
-        app.logger.info(
-            f"Received data - Order ID: {order_id}, Retail Price: {retail_price}, Cost Price: {cost_price}, Materials: {materials}")
-
-        order = Order(id=order_id, retail_price=float(retail_price), cost_price=float(cost_price), materials=materials)
-        db.session.add(order)
-        db.session.commit()
-
-        return jsonify({'status': 'success'}), 200
-    except Exception as e:
-        app.logger.error(f"Error: {str(e)}")
-        return jsonify({'status': 'error', 'message': str(e)}), 400
-
-
-@app.route('/update_print_options', methods=['GET'])
+@main_bp.route('/update_print_options', methods=['GET'])
 def update_print_options():
     machine_type = request.args.get('machine_type')
     print_types = PrintType.query.all()
@@ -178,50 +121,50 @@ def update_print_options():
     return jsonify(options)
 
 
-@app.route('/calculator')
-def calculator():
-    return redirect(url_for('sheet_printing'))
+@main_bp.route('/save_order', methods=['POST'])
+def save_order():
+    try:
+        current_app.logger.info(f"Received form data: {request.form}")
+        order_id = request.form.get('order_id')
+        retail_price = request.form.get('retail_price')
+        cost_price = request.form.get('total_cost')
+        materials = request.form.get('materials')
+
+        if not order_id or not retail_price or not cost_price or not materials:
+            raise ValueError("Missing one or more required fields: order_id, retail_price, cost_price, materials")
+
+        current_app.logger.info(
+            f"Received data - Order ID: {order_id}, Retail Price: {retail_price}, Cost Price: {cost_price}, Materials: {materials}")
+
+        order = Order(id=order_id, retail_price=float(retail_price), cost_price=float(cost_price), materials=materials)
+        db.session.add(order)
+        db.session.commit()
+
+        return jsonify({'status': 'success'}), 200
+    except Exception as e:
+        current_app.logger.error(f"Error: {str(e)}")
+        return jsonify({'status': 'error', 'message': str(e)}), 400
 
 
-@app.route('/multi_page_printing')
+@main_bp.route('/multi_page_printing')
 def multi_page_printing():
+    current_app.logger.info('Multi page printing calculator accessed')
     return render_template('Calculator/multi_page_printing.html')
 
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        password = request.form['password']
-        if password == Config.SECRET_ADMIN_PASSWORD:
-            user = User()
-            login_user(user)
-            next_page = request.args.get('next')
-            return redirect(next_page or url_for('admin.index'))
-        flash('Неверный пароль')
-    return render_template('login.html')
-
-
-@app.route('/logout')
-@app.route('/admin/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('index'))
-    # return redirect(url_for('security.login'))
-
-
-@app.route('/orders')
-@app.route('/calculator/orders')
+@main_bp.route('/orders')
+@main_bp.route('/calculator/orders')
 def show_orders():
+    current_app.logger.info('Orders page accessed')
     orders = Order.query.all()
     return render_template('Calculator/orders.html', orders=orders)
 
 
-@app.route('/calculator/wide_format_printing', methods=['GET', 'POST'])
-@app.route('/wide_format_printing', methods=['GET', 'POST'])
+@main_bp.route('/calculator/wide_format_printing', methods=['GET', 'POST'])
+@main_bp.route('/wide_format_printing', methods=['GET', 'POST'])
 def calculate_wide_format():
+    current_app.logger.info('Wide format printing calculator accessed')
     if request.method == 'POST':
-        # Получаем данные из формы
         paper_ids = request.form.getlist('paper_type')
         print_ids = request.form.getlist('print_type')
         process_ids = request.form.getlist('post_processing')
@@ -231,7 +174,6 @@ def calculate_wide_format():
         hours = int(request.form.get('hours', 0))
         materials_text = ""
 
-        # Получаем информацию из базы данных
         paper_details = [(PaperTypeLarge.query.get(paper_id), int(paper_quantity)) for paper_id, paper_quantity in
                          zip(paper_ids, paper_quantities)]
         print_details = [(PrintTypeLarge.query.get(print_id), int(print_quantity)) for print_id, print_quantity in
@@ -239,40 +181,35 @@ def calculate_wide_format():
         postprint_details = [(PostPrintProcessingLarge.query.get(process_id), int(process_quantity)) for
                              process_id, process_quantity in zip(process_ids, process_quantities)]
 
-        # Добавляем информацию о бумаге
         for i, (paper, quantity) in enumerate(paper_details):
             materials_text += f"Бумага {i + 1} - {paper.name} - {quantity} м² по цене {paper.price_per_unit}\r\n"
 
-        # Добавляем информацию о печати
         for i, (print_type, quantity) in enumerate(print_details):
             materials_text += f"Печать {i + 1} - {print_type.name} - {quantity} м² по цене {print_type.price_per_unit_canon}\r\n"
 
-        # Добавляем информацию о постпечатной обработке
         for i, (process, quantity) in enumerate(postprint_details):
             materials_text += f"Постпечатка {i + 1} - {process.name} - {quantity} шт по цене {process.price_per_unit}\r\n"
 
-        # Получаем стоимость часа работы
         work_cost_variable = Variables.query.get(1)
         hourly_rate = work_cost_variable.value if work_cost_variable else 0
         work_cost = hours * hourly_rate
         materials_text += f"Работа - {hours} ч. по цене {hourly_rate}\r\n"
 
-        # Рассчитываем закупочную стоимость
         total_cost = sum([detail[1] * detail[0].price_per_unit for detail in paper_details]) + \
                      sum([detail[1] * detail[0].price_per_unit_canon for detail in print_details]) + \
                      sum([detail[1] * detail[0].price_per_unit for detail in postprint_details]) + work_cost
 
-        # Получаем коэффициенты из базы данных
-        coefficient = Variables.query.get(2).value  # Коэффициент общий
-        regulars_discount = Variables.query.get(5).value  # Коэффициент скидки постоянников
-        partners_discount = Variables.query.get(6).value  # Коэффициент скидки партнеров
-        urgent_coefficient = Variables.query.get(4).value  # Коэффициент срочности
+        coefficient = Variables.query.get(2).value
+        regulars_discount = Variables.query.get(5).value
+        partners_discount = Variables.query.get(6).value
+        urgent_coefficient = Variables.query.get(4).value
 
-        # Рассчитываем розничную цену и другие цены
         retail_price = total_cost * coefficient
         regulars_price = retail_price * regulars_discount
         partners_price = retail_price * partners_discount
         urgent_price = retail_price * urgent_coefficient
+
+        current_app.logger.info(f'Retail Price: {retail_price}, Total Cost: {total_cost}')
 
         return render_template('Calculator/wide_format_printing.html', total_cost=total_cost, work_cost=work_cost,
                                paper_details=paper_details, print_details=print_details,
@@ -286,10 +223,3 @@ def calculate_wide_format():
                            print_types=PrintTypeLarge.query.all(),
                            post_processings=PostPrintProcessingLarge.query.all(),
                            paper_details=[], print_details=[], postprint_details=[])
-
-
-if __name__ == '__main__':
-    with app.app_context():
-        app.run(host="0.0.0.0", port=5000)
-    #     db.create_all()
-    # app.run(debug=True)

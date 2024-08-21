@@ -5,7 +5,7 @@ from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user, login_required
 from markupsafe import Markup
 
-from models import *
+from app.models import *
 
 
 class MyModelView(ModelView):
