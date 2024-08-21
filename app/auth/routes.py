@@ -5,16 +5,16 @@ from ..models import User
 auth_bp = Blueprint('auth', __name__)
 
 
-@auth_bp.route('/login', methods=['GET', 'POST'])
+@auth_bp.route('/login', methods=['POST'])
 def login():
-    if request.method == 'POST':
-        password = request.form['password']
-        if password == Config.SECRET_ADMIN_PASSWORD:
-            session['authenticated'] = True  # Устанавливаем флаг сессии
-            next_page = request.args.get('next')
-            return redirect(next_page or url_for('main.index'))
-        flash('Неверный пароль')
-    return render_template('login.html')
+    password = request.form['password']
+    if password == Config.SECRET_ADMIN_PASSWORD:
+        session['authenticated'] = True  # Сохраняем состояние аутентификации в сессии
+        return redirect(url_for('admin.index'))  # Перенаправляем в админку
+    flash('Неверный пароль')
+    return redirect(url_for('main.index'))
+
+
 
 
 @auth_bp.route('/logout')
