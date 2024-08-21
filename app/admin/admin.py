@@ -1,9 +1,10 @@
-from flask import redirect, url_for, request
-from flask_admin import Admin, AdminIndexView, expose
+from flask import redirect, url_for, request, g, current_app
+from flask_admin import Admin, AdminIndexView, expose, BaseView
 from flask_admin.menu import MenuLink
 from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user, login_required
 from markupsafe import Markup
+from sqlalchemy import event, Engine
 
 from app.models import *
 
@@ -56,6 +57,14 @@ class OrderAdminView(ModelView):
     }
 
 
+class LogsView(BaseView):
+    @expose('/')
+    def index(self):
+        with open('app.log', 'r') as f:
+            logs = f.readlines()
+        return self.render('admin/logs.html', logs=logs)
+
+
 def create_admin(app):
     admin = Admin(app, name="PS#1 admin", index_view=MyAdminIndexView(name='Главная'), template_mode='bootstrap4')
     admin.add_view(CustomModelView(PaperType, db.session, name='Бумага', endpoint='papertype'))
@@ -69,5 +78,11 @@ def create_admin(app):
     admin.add_view(CustomModelView(PostPrintProcessingLarge, db.session, name='Постпечатка шир',
                                    endpoint='postprintprocessinglarge'))
     admin.add_view(OrderAdminView(Order, db.session, name='Заказы'))
+    admin.add_view(LogsView(name='Логи', endpoint='logs'))  # Добавляем Логи в меню
     admin.add_link(MenuLink(name='Выход', category='', url='/admin/logout'))
     return admin
+
+
+@event.listens_for(Engine, "before_cursor_execute")
+def before_cursor_execute(conn, cursor, statement, parameters, context, executemany):
+    current_app.logger.info(f"User: {g.user}, Executing: {statement}, Parameters: {parameters}")

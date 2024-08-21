@@ -1,0 +1,23 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+<h2>Application Logs</h2>
+<div style="width: 90%; margin: 0 auto;">
+    <textarea id="logArea" style="width: 100%;" rows="20" readonly>
+{% for line in logs %}
+{{ line.rstrip() }}
+{% endfor %}
+    </textarea>
+    <br>
+    <button style="margin-top: 10px;" onclick="copyLogs()">Copy Logs</button>
+</div>
+
+<script>
+function copyLogs() {
+    var copyText = document.getElementById("logArea");
+    copyText.select();
+    document.execCommand("copy");
+    alert("Logs copied to clipboard!");
+}
+</script>
+{% endblock %}
