@@ -1,7 +1,10 @@
 from flask import Blueprint, render_template, request, jsonify, current_app
+
+import logging
 from ..models import *
 
 main_bp = Blueprint('main', __name__)
+logger = logging.getLogger('app_logger')
 
 
 @main_bp.route('/')
@@ -133,12 +136,12 @@ def save_order():
         if not order_id or not retail_price or not cost_price or not materials:
             raise ValueError("Missing one or more required fields: order_id, retail_price, cost_price, materials")
 
-        # current_app.logger.info(
-        #     f"Received data - Order ID: {order_id}, Retail Price: {retail_price}, Cost Price: {cost_price}, Materials: {materials}")
-
         order = Order(id=order_id, retail_price=float(retail_price), cost_price=float(cost_price), materials=materials)
         db.session.add(order)
         db.session.commit()
+
+        logger.info(
+            f'Добавлена новая запись: Заказ ID: {order_id}, Розничная цена: {retail_price}, Себестоимость: {cost_price}, Материалы: {materials}')
 
         return jsonify({'status': 'success'}), 200
     except Exception as e:
