@@ -10,7 +10,7 @@
         <div class="form-group d-flex">
             <select class="form-control" id="paper_type" name="paper_type" style="flex: 1;">
                 {% for paper in paper_types %}
-                <option value="{{ paper.id }}" {% if paper.id == paper_detail[0].id %}selected{% endif %}>
+                <option value="{{ paper.id }}" {% if paper.id== paper_detail[0].id %}selected{% endif %}>
                     {{ paper.name }} - {{ paper.price_per_unit }} руб/лист
                 </option>
                 {% endfor %}
@@ -28,16 +28,19 @@
         <div class="d-flex form-group">
             <select class="form-control" id="machine_type_{{ loop.index }}" name="machine_type"
                     onchange="updatePrintOptions(this.value, this)" style="width: 20%">
-                <option value="xerox" {% if print_detail[0] == 'xerox' %} selected {% endif %}>Xerox</option>
-                <option value="konica" {% if print_detail[0] == 'konica' %} selected {% endif %}>Konica</option>
+                <option value="xerox" {% if print_detail[0]==
+                'xerox' %} selected {% endif %}>Xerox</option>
+                <option value="konica" {% if print_detail[0]==
+                'konica' %} selected {% endif %}>Konica</option>
             </select>
             <select class="form-control" id="print-content-{{ loop.index }}" name="print_type"
                     style="flex: 1; margin-right: 10px;">
                 {% for print in print_types %}
                 <option value="{{ print.id }}" data-xerox="{{ print.price_per_unit_xerox }}"
                         data-konica="{{ print.price_per_unit_konica }}"
-                        {% if print.id == print_detail[1].id %} selected {% endif %}>
-                    {{ print.name }} - {{ print.price_per_unit_xerox if print_detail[0] == 'xerox' else print.price_per_unit_konica }} руб/лист
+                        {% if print.id== print_detail[1].id %} selected {% endif %}>
+                    {{ print.name }} - {{ print.price_per_unit_xerox if print_detail[0] == 'xerox' else
+                    print.price_per_unit_konica }} руб/лист
                 </option>
                 {% endfor %}
             </select>
@@ -55,7 +58,7 @@
         <div class="form-group d-flex">
             <select class="form-control" id="postprint_type" name="postprint_type" style="flex: 1;">
                 {% for postprint in postprint_types %}
-                <option value="{{ postprint.id }}" {% if postprint.id == postprint_detail[0].id %}selected{% endif %}>
+                <option value="{{ postprint.id }}" {% if postprint.id== postprint_detail[0].id %}selected{% endif %}>
                     {{ postprint.name }} - {{ postprint.price_per_unit }} руб/единица
                 </option>
                 {% endfor %}
@@ -65,6 +68,26 @@
             <button type="button" class="calc-btn btn btn-light" onclick="addPostprintSection()">+</button>
         </div>
         {% endfor %}
+    </div>
+
+    <!-- Чекбокс для включения ручного ввода -->
+    <div class="form-group">
+        <input type="checkbox" id="manualMaterialInput" name="manualMaterialInput" onchange="toggleManualInput()" {% if
+               manual_material_name %}checked{% endif %}/>
+        <label for="manualMaterialInput">Ручной ввод расходного материала</label>
+    </div>
+
+    <div id="manualInputSection" style="display: {% if manual_material_name %}block{% else %}none{% endif %};">
+        <div class="form-group d-flex">
+            <input type="text" class="form-control" id="manualMaterialName" name="manualMaterialName"
+                   placeholder="Название материала" value="{{ manual_material_name }}"
+                   style="flex: 1; margin-right: 10px;">
+            <input type="number" class="form-control" id="manualMaterialPrice" name="manualMaterialPrice"
+                   placeholder="Цена за единицу" value="{{ manual_material_price }}"
+                   style="width: 20%; margin-right: 10px;">
+            <input type="number" class="form-control" id="manualMaterialQuantity" name="manualMaterialQuantity"
+                   placeholder="Количество" value="{{ manual_material_quantity }}" style="width: 15%;">
+        </div>
     </div>
 
     <div class="form-group">
@@ -169,8 +192,14 @@
             руб.
         </li>
         {% endfor %}
+        {% if manual_material_name %}
+        <li>Свободный материал: {{ manual_material_name }}, количество: {{ manual_material_quantity }} на сумму {{
+            (manual_material_quantity * manual_material_price) | round(2) }} руб.
+        </li>
+        {% endif %}
         <li>Работа: {{ work_time }} часов на сумму {{ work_cost }} руб.</li>
     </ul>
+
 </div>
 {% endif %}
 

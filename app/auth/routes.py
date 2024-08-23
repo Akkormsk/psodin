@@ -15,8 +15,6 @@ def login():
     return redirect(url_for('main.index'))
 
 
-
-
 @auth_bp.route('/logout')
 @auth_bp.route('/admin/logout')
 def logout():

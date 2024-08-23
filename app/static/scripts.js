@@ -108,3 +108,28 @@ function confirmOrderId() {
         alert('Введите ID заказа.');
     }
 }
+
+function toggleManualInput() {
+    const manualInputSection = document.getElementById('manualInputSection');
+    manualInputSection.style.display = manualInputSection.style.display === 'none' ? 'block' : 'none';
+}
+
+// Добавить введенный вручную материал
+function addManualMaterial() {
+    const materialName = document.getElementById('manualMaterialName').value;
+    const materialPrice = parseFloat(document.getElementById('manualMaterialPrice').value);
+    const materialQuantity = parseInt(document.getElementById('manualMaterialQuantity').value, 10);
+
+    if (materialName && materialPrice > 0 && materialQuantity > 0) {
+        // Добавление материала к total_cost и в materials_text
+        totalCost += materialPrice * materialQuantity;
+        materialsText += `Ручной ввод: ${materialName} - ${materialQuantity} шт по цене ${materialPrice} руб/шт\r\n`;
+
+        // Очистка полей
+        document.getElementById('manualMaterialName').value = '';
+        document.getElementById('manualMaterialPrice').value = '';
+        document.getElementById('manualMaterialQuantity').value = '';
+    } else {
+        alert('Пожалуйста, заполните все поля корректными значениями.');
+    }
+}

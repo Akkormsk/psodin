@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template, request, jsonify, current_app
+import os
+
+from flask import Blueprint, render_template, request, jsonify, current_app, send_from_directory
 
 import logging
 from ..models import *
@@ -17,79 +19,98 @@ def index():
 @main_bp.route('/sheet_printing', methods=['GET', 'POST'])
 @main_bp.route('/calculator', methods=['GET', 'POST'])
 def sheet_printing_func():
-    if request.method == 'POST':
-        paper_type_ids = request.form.getlist('paper_type')
-        paper_quantities = request.form.getlist('paper_quantity')
-        machine_types = request.form.getlist('machine_type')
-        print_type_ids = request.form.getlist('print_type')
-        print_quantities = request.form.getlist('print_quantity')
-        postprint_types = request.form.getlist('postprint_type')
-        postprint_quantities = request.form.getlist('postprint_quantity')
-        work_time = float(request.form['work_time'])
+    try:
+        if request.method == 'POST':
+            paper_type_ids = request.form.getlist('paper_type')
+            paper_quantities = request.form.getlist('paper_quantity')
+            machine_types = request.form.getlist('machine_type')
+            print_type_ids = request.form.getlist('print_type')
+            print_quantities = request.form.getlist('print_quantity')
+            postprint_types = request.form.getlist('postprint_type')
+            postprint_quantities = request.form.getlist('postprint_quantity')
+            work_time = float(request.form['work_time'])
 
-        materials_text = ""
+            materials_text = ""
 
-        paper_details = []
-        paper_cost = 0
-        total_paper = 0
-        for i in range(len(paper_type_ids)):
-            paper = PaperType.query.get(paper_type_ids[i])
-            quantity = int(paper_quantities[i])
-            paper_cost += quantity * paper.price_per_unit
-            total_paper += quantity
-            paper_details.append((paper, quantity))
-            materials_text += f"Бумага {i + 1} - {paper.name} - {quantity} шт по цене {paper.price_per_unit}\r\n"
+            paper_details = []
+            paper_cost = 0
+            total_paper = 0
+            for i in range(len(paper_type_ids)):
+                paper = PaperType.query.get(paper_type_ids[i])
+                quantity = int(paper_quantities[i])
+                paper_cost += quantity * paper.price_per_unit
+                total_paper += quantity
+                paper_details.append((paper, quantity))
+                materials_text += f"Бумага {i + 1} - {paper.name} - {quantity} шт по цене {paper.price_per_unit}\r\n"
 
-        print_details = []
-        print_cost = 0
-        for i in range(len(machine_types)):
-            machine_type = machine_types[i]
-            print_type = PrintType.query.get(print_type_ids[i])
-            quantity = int(print_quantities[i])
-            if machine_type == 'xerox':
-                print_cost += quantity * print_type.price_per_unit_xerox
-                materials_text += f"Печать {i + 1} - {machine_type} - {print_type.name} - {quantity} шт по цене {print_type.price_per_unit_xerox}\r\n"
-            else:
-                print_cost += quantity * print_type.price_per_unit_konica
-                materials_text += f"Печать {i + 1} - {machine_type} - {print_type.name} - {quantity} шт по цене {print_type.price_per_unit_konica}\r\n"
-            print_details.append((machine_type, print_type, quantity))
+            print_details = []
+            print_cost = 0
+            for i in range(len(machine_types)):
+                machine_type = machine_types[i]
+                print_type = PrintType.query.get(print_type_ids[i])
+                quantity = int(print_quantities[i])
+                if machine_type == 'xerox':
+                    print_cost += quantity * print_type.price_per_unit_xerox
+                    materials_text += f"Печать {i + 1} - {machine_type} - {print_type.name} - {quantity} шт по цене {print_type.price_per_unit_xerox}\r\n"
+                else:
+                    print_cost += quantity * print_type.price_per_unit_konica
+                    materials_text += f"Печать {i + 1} - {machine_type} - {print_type.name} - {quantity} шт по цене {print_type.price_per_unit_konica}\r\n"
+                print_details.append((machine_type, print_type, quantity))
 
-        postprint_details = []
-        postprint_cost = 0
-        for i in range(len(postprint_types)):
-            postprint_type = PostPrintProcessing.query.get(postprint_types[i])
-            quantity = int(postprint_quantities[i])
-            postprint_cost += quantity * postprint_type.price_per_unit
-            postprint_details.append((postprint_type, quantity))
-            materials_text += f"Постпечатка {i + 1} - {postprint_type.name} - {quantity} шт по цене {postprint_type.price_per_unit}\r\n"
+            postprint_details = []
+            postprint_cost = 0
+            for i in range(len(postprint_types)):
+                postprint_type = PostPrintProcessing.query.get(postprint_types[i])
+                quantity = int(postprint_quantities[i])
+                postprint_cost += quantity * postprint_type.price_per_unit
+                postprint_details.append((postprint_type, quantity))
+                materials_text += f"Постпечатка {i + 1} - {postprint_type.name} - {quantity} шт по цене {postprint_type.price_per_unit}\r\n"
 
-        work = Variables.query.get(1)
-        margin_ratio = Variables.query.get(2)
-        regulars_discount = Variables.query.get(5)
-        partners_discount = Variables.query.get(6)
-        urgency = Variables.query.get(7)
+            work = Variables.query.get(1)
+            margin_ratio = Variables.query.get(2)
+            regulars_discount = Variables.query.get(5)
+            partners_discount = Variables.query.get(6)
+            urgency = Variables.query.get(7)
 
-        work_cost = work_time * work.value if work else 0
-        materials_text += f"Работа - {work_time} ч. по цене {work.value}\r\n"
+            work_cost = work_time * work.value if work else 0
+            materials_text += f"Работа - {work_time} ч. по цене {work.value}\r\n"
 
-        total_cost = round(paper_cost + print_cost + postprint_cost + work_cost, 2)
-        retail_price = round(total_cost * margin_ratio.value * (1 + (1 / total_paper)), 2)
-        regulars_price = round(retail_price * regulars_discount.value, 2)
-        partners_price = round(retail_price * partners_discount.value, 2)
-        urgent_price = round(retail_price * urgency.value, 2)
+            total_cost = round(paper_cost + print_cost + postprint_cost + work_cost, 2)
 
-        # current_app.logger.info(f'Print details: {print_details}')
+            print(total_cost)
 
-        return render_template('Calculator/sheet_printing.html', total_cost=total_cost,
-                               paper_details=paper_details, print_details=print_details,
-                               postprint_details=postprint_details, work_time=work_time,
-                               paper_cost=paper_cost, postprint_cost=postprint_cost,
-                               paper_types=PaperType.query.all(), print_types=PrintType.query.all(),
-                               postprint_types=PostPrintProcessing.query.all(), work_cost=work_cost,
-                               print_cost=print_cost, retail_price=retail_price,
-                               regulars_price=regulars_price, partners_price=partners_price,
-                               urgent_price=urgent_price, machine_type=machine_types[0],
-                               materials_text=materials_text)
+            # Обработка ручного ввода материала
+            manual_material_name = request.form.get('manualMaterialName')
+            manual_material_price = float(request.form.get('manualMaterialPrice'))
+            manual_material_quantity = int(request.form.get('manualMaterialQuantity'))
+
+            if manual_material_name and manual_material_price and manual_material_quantity:
+                manual_material_cost = manual_material_price * manual_material_quantity
+                total_cost += manual_material_cost
+                materials_text += f"Свободный материал: {manual_material_name} - {manual_material_quantity} шт по цене {manual_material_price} руб/шт\r\n"
+
+            retail_price = round(total_cost * margin_ratio.value * (1 + (1 / total_paper)), 2)
+            regulars_price = round(retail_price * regulars_discount.value, 2)
+            partners_price = round(retail_price * partners_discount.value, 2)
+            urgent_price = round(retail_price * urgency.value, 2)
+
+            return render_template('Calculator/sheet_printing.html', total_cost=total_cost,
+                                   paper_details=paper_details, print_details=print_details,
+                                   postprint_details=postprint_details, work_time=work_time,
+                                   paper_cost=paper_cost, postprint_cost=postprint_cost,
+                                   paper_types=PaperType.query.all(), print_types=PrintType.query.all(),
+                                   postprint_types=PostPrintProcessing.query.all(), work_cost=work_cost,
+                                   print_cost=print_cost, retail_price=retail_price,
+                                   regulars_price=regulars_price, partners_price=partners_price,
+                                   urgent_price=urgent_price, machine_type=machine_types[0],
+                                   manual_material_name=manual_material_name,
+                                   manual_material_price=manual_material_price,
+                                   manual_material_quantity=manual_material_quantity,
+                                   materials_text=materials_text)
+
+    except Exception as e:
+        current_app.logger.error(f"Error in sheet_printing_func: {e}")
+        return "An error occurred", 500
 
     return render_template('Calculator/sheet_printing.html',
                            paper_types=PaperType.query.all(),
@@ -212,8 +233,6 @@ def calculate_wide_format():
         partners_price = retail_price * partners_discount
         urgent_price = retail_price * urgent_coefficient
 
-        # current_app.logger.info(f'Retail Price: {retail_price}, Total Cost: {total_cost}')
-
         return render_template('Calculator/wide_format_printing.html', total_cost=total_cost, work_cost=work_cost,
                                paper_details=paper_details, print_details=print_details,
                                postprint_details=postprint_details, work_time=hours, retail_price=retail_price,
@@ -226,3 +245,9 @@ def calculate_wide_format():
                            print_types=PrintTypeLarge.query.all(),
                            post_processings=PostPrintProcessingLarge.query.all(),
                            paper_details=[], print_details=[], postprint_details=[])
+
+
+@main_bp.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(current_app.root_path, 'static'),
+                               'favicon.png', mimetype='image/vnd.microsoft.icon')
