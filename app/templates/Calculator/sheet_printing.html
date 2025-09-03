@@ -6,6 +6,7 @@
 
     <label for="paper_type">Выберите бумагу:</label>
     <div id="paper-sections">
+        {% if paper_details %}
         {% for paper_detail in paper_details %}
         <div class="form-group d-flex">
             <select class="form-control" id="paper_type" name="paper_type" style="flex: 1;">
@@ -20,10 +21,23 @@
             <button type="button" class="calc-btn btn btn-light" onclick="addPaperSection()">+</button>
         </div>
         {% endfor %}
+        {% else %}
+        <div class="form-group d-flex">
+            <select class="form-control" id="paper_type" name="paper_type" style="flex: 1;">
+                {% for paper in paper_types %}
+                <option value="{{ paper.id }}">{{ paper.name }} - {{ paper.price_per_unit }} руб/лист</option>
+                {% endfor %}
+            </select>
+            <input type="number" class="form-control" id="paper_quantity" name="paper_quantity" placeholder="Количество"
+                   style="width: 15%;" required>
+            <button type="button" class="calc-btn btn btn-light" onclick="addPaperSection()">+</button>
+        </div>
+        {% endif %}
     </div>
 
     <label for="machine-type">Выберите тип печати:</label>
     <div id="print_sections">
+        {% if print_details %}
         {% for print_detail in print_details %}
         <div class="d-flex form-group">
             <select class="form-control" id="machine_type_{{ loop.index }}" name="machine_type"
@@ -50,10 +64,31 @@
             <button type="button" class="calc-btn btn btn-light" onclick="addPrintSection()">+</button>
         </div>
         {% endfor %}
+        {% else %}
+        <div class="d-flex form-group">
+            <select class="form-control" id="machine_type_1" name="machine_type" onchange="updatePrintOptions(this.value, this)"
+                    style="width: 20%">
+                <option value="xerox" selected>Xerox</option>
+                <option value="konica">Konica</option>
+            </select>
+            <select class="form-control" id="print-content-1" name="print_type" style="flex: 1; margin-right: 10px;">
+                {% for print in print_types %}
+                <option value="{{ print.id }}" data-xerox="{{ print.price_per_unit_xerox }}"
+                        data-konica="{{ print.price_per_unit_konica }}">
+                    {{ print.name }} - {{ print.price_per_unit_xerox }} руб/лист
+                </option>
+                {% endfor %}
+            </select>
+            <input type="number" class="form-control" id="print_quantity" name="print_quantity" placeholder="Количество"
+                   style="width: 15%;" required>
+            <button type="button" class="calc-btn btn btn-light" onclick="addPrintSection()">+</button>
+        </div>
+        {% endif %}
     </div>
 
     <label for="postprint_type">Выберите постпечатную обработку:</label>
     <div id="postprint-sections-wrap">
+        {% if postprint_details %}
         {% for postprint_detail in postprint_details %}
         <div class="form-group d-flex">
             <select class="form-control" id="postprint_type" name="postprint_type" style="flex: 1;">
@@ -68,6 +103,19 @@
             <button type="button" class="calc-btn btn btn-light" onclick="addPostprintSection()">+</button>
         </div>
         {% endfor %}
+        {% else %}
+        <div class="form-group d-flex">
+            <select class="form-control" id="postprint_type" name="postprint_type" style="flex: 1;">
+                {% for postprint in postprint_types %}
+                <option value="{{ postprint.id }}">{{ postprint.name }} - {{ postprint.price_per_unit }} руб/единица
+                </option>
+                {% endfor %}
+            </select>
+            <input type="number" class="form-control" id="postprint_quantity" name="postprint_quantity" placeholder="Количество"
+                   style="width: 15%;" required>
+            <button type="button" class="calc-btn btn btn-light" onclick="addPostprintSection()">+</button>
+        </div>
+        {% endif %}
     </div>
 
     <!-- Чекбокс для включения ручного ввода -->
@@ -77,14 +125,14 @@
         <label for="manualMaterialInput">Ручной ввод расходного материала</label>
     </div>
 
-    <div id="manualInputSection" style="display: {% if manual_material_name %}block{% else %}none{% endif %};">
+    <div id="manualInputSection" class="{% if manual_material_name %}d-block{% else %}d-none{% endif %}">
         <div class="form-group d-flex">
             <input type="text" class="form-control" id="manualMaterialName" name="manualMaterialName"
                    placeholder="Название материала" value="{{ manual_material_name }}"
                    style="flex: 1; margin-right: 10px;">
             <input type="number" class="form-control" id="manualMaterialPrice" name="manualMaterialPrice"
                    placeholder="Цена за единицу" value="{{ manual_material_price }}"
-                   style="width: 20%; margin-right: 10px;">
+                   style="width: 20%; margin-right: 10px;" step="any">
             <input type="number" class="form-control" id="manualMaterialQuantity" name="manualMaterialQuantity"
                    placeholder="Количество" value="{{ manual_material_quantity }}" style="width: 15%;">
         </div>

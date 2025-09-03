@@ -3,18 +3,18 @@
 {% block content %}
 <!--<h1>Добро пожаловать в PSadmin Panel</h1>-->
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-4 mb-4">
         <div class="card">
             <div class="card-body d-flex justify-content-between">
                 <div>
                     <h5 class="card-title">Калькулятор</h5>
-                    <a href="{{ url_for('main.sheet_printing_func') }}" class="btn btn-primary">Перейти</a>
+                    <a href="{{ url_for('calculator.sheet_printing_func') }}" class="btn btn-primary" id="calculator-link">Перейти</a>
                 </div>
                 <img src="{{ url_for('static', filename='calculator_2374367.png') }}" alt="Calculator Icon" style="width: 30px; height: 30px;">
             </div>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-4 mb-4">
         <div class="card">
             <div class="card-body d-flex justify-content-between">
                 <div>
@@ -25,7 +25,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-4 mb-4">
         <div class="card">
             <div class="card-body d-flex justify-content-between">
                 <div>
@@ -36,5 +36,18 @@
             </div>
         </div>
     </div>
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body d-flex justify-content-between">
+                <div>
+                    <h5 class="card-title">Подготовка DataMatrix</h5>
+                    <a href="{{ url_for('datamatrix.datamatrix_index') }}" class="btn btn-primary" id="datamatrix-link">Перейти</a>
+                </div>
+                <img src="{{ url_for('static', filename='qr.png') }}" alt="Test Icon" style="width: 30px; height: 30px;">
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
+
+

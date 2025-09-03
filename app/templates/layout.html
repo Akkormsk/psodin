@@ -28,5 +28,6 @@
 {% include 'login.html' %}
 
 <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+{% block extra_scripts %}{% endblock %}
 </body>
 </html>

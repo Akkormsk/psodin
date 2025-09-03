@@ -1,0 +1,184 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Обработка DataMatrix</h1>
+    <form method="POST" enctype="multipart/form-data" id="uploadForm">
+        <div class="form-group">
+            <label for="kiz_file">Загрузите файл PDF с КИЗами:</label>
+            <input type="file" class="form-control-file" id="kiz_file" name="kiz_file" accept=".pdf" required>
+        </div>
+        <button type="submit" class="btn btn-primary" id="processButton">Обработать</button>
+    </form>
+
+    <div id="resultsSection" class="mt-4" style="display: none;">
+        <button id="downloadPdfBtn" class="btn btn-success mb-3">Скачать как PDF</button>
+        <h2>Сгенерированные DataMatrix коды:</h2>
+        <div class="image-grid"></div>
+    </div>
+
+    <div id="messageSection" class="mt-3" style="display: none;"></div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const uploadForm = document.getElementById('uploadForm');
+        const kizFileInput = document.getElementById('kiz_file');
+        const resultsSection = document.getElementById('resultsSection');
+        const downloadPdfBtn = document.getElementById('downloadPdfBtn');
+        const imageGrid = document.querySelector('.image-grid');
+        const messageSection = document.getElementById('messageSection');
+        const processButton = document.getElementById('processButton');
+
+        // Функция для отображения сообщений
+        function showMessage(message, type = 'info') {
+            messageSection.style.display = 'block';
+            messageSection.className = `alert alert-${type} mt-3`;
+            messageSection.textContent = message;
+        }
+
+        // Функция для очистки сообщений
+        function clearMessages() {
+            messageSection.style.display = 'none';
+            messageSection.textContent = '';
+        }
+
+        // Отключаем стандартную отправку формы
+        uploadForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            if (kizFileInput.files.length === 0) {
+                showMessage('Пожалуйста, выберите файл для загрузки.', 'danger');
+                return;
+            }
+
+            clearMessages();
+            resultsSection.style.display = 'none';
+            imageGrid.innerHTML = '';
+            processButton.disabled = true;
+
+            showMessage('Обработка файла...', 'info');
+
+            const formData = new FormData();
+            formData.append('kiz_file', kizFileInput.files[0]);
+
+            fetch("{{ url_for('datamatrix.datamatrix_index') }}", {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    showMessage(data.error, 'danger');
+                } else if (data.message) {
+                    showMessage(data.message, 'info');
+                    if (data.encoded_images && data.encoded_images.length > 0) {
+                        resultsSection.style.display = 'block';
+                        
+                        // Отображаем сгенерированные изображения кодов
+                        data.encoded_images.forEach((image_data, index) => {
+                            const imgContainer = document.createElement('div');
+                            imgContainer.className = 'd-inline-block m-2';
+                            imgContainer.style.cursor = 'pointer';
+                            
+                                                         const img = document.createElement('img');
+                             img.src = "data:image/png;base64," + image_data;
+                             img.alt = `DataMatrix Code ${index + 1}`;
+                             img.className = 'img-thumbnail';
+                             img.style.width = '100px';
+                             img.style.height = '120px';
+                             img.style.objectFit = 'contain';
+                             img.style.border = '2px solid #ddd';
+                            
+                                                         // Добавляем обработчик клика для увеличения
+                             img.addEventListener('click', function() {
+                                 const modal = document.createElement('div');
+                                 modal.className = 'modal fade';
+                                 modal.innerHTML = `
+                                     <div class="modal-dialog modal-lg">
+                                         <div class="modal-content">
+                                             <div class="modal-header">
+                                                 <h5 class="modal-title">DataMatrix код ${index + 1}</h5>
+                                                 <button type="button" class="close" data-dismiss="modal">
+                                                     <span>&times;</span>
+                                                 </button>
+                                             </div>
+                                             <div class="modal-body text-center">
+                                                 <img src="${img.src}" style="max-width: 100%; max-height: 70vh; object-fit: contain;">
+                                             </div>
+                                         </div>
+                                     </div>
+                                 `;
+                                 document.body.appendChild(modal);
+                                 $(modal).modal('show');
+                                 modal.addEventListener('hidden.bs.modal', function() {
+                                     document.body.removeChild(modal);
+                                 });
+                                 
+                                 // Для Bootstrap 4 также добавляем обработчик hidden
+                                 $(modal).on('hidden.bs.modal', function() {
+                                     document.body.removeChild(modal);
+                                 });
+                             });
+                            
+                            imgContainer.appendChild(img);
+                            imageGrid.appendChild(imgContainer);
+                        });
+                    }
+                } else {
+                    showMessage('Неизвестный ответ сервера.', 'danger');
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка при загрузке файла:', error);
+                showMessage('Ошибка сети или сервера.', 'danger');
+            })
+            .finally(() => {
+                processButton.disabled = false;
+            });
+        });
+
+        // Обработчик кнопки скачивания PDF
+        if (downloadPdfBtn) {
+            downloadPdfBtn.addEventListener('click', function() {
+                const images = document.querySelectorAll('.image-grid img');
+                const base64Images = Array.from(images).map(img => img.src.split(',')[1]);
+
+                fetch("{{ url_for('datamatrix.download_pdf') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ images: base64Images })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.blob();
+                    } else {
+                        return response.json().then(errorData => {
+                            throw new Error(errorData.message || 'Ошибка при создании PDF');
+                        });
+                    }
+                })
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = 'datamatrix_codes.pdf';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                })
+                .catch(error => {
+                    alert(error.message);
+                    console.error('Ошибка:', error);
+                });
+            });
+        }
+    });
+</script>
+{% endblock %}

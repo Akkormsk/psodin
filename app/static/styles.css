@@ -82,6 +82,11 @@ h2 {
     white-space: pre-line;  /* Отображение переноса строк */
 }
 
+input#manualMaterialInput {
+    margin-right: 5px; /* Добавляем небольшой отступ справа */
+
+}
+
 .icon {
     width: 30px;
     height: 30px;

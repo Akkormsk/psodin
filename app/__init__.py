@@ -5,6 +5,8 @@ from flask_session import Session
 from .models import db
 from .auth.routes import auth_bp
 from .main.routes import main_bp
+from .datamatrix.routes import datamatrix_bp
+from .calculator.routes import calculator_bp
 from app.logging.logging_config import configure_logging
 from app.admin.admin import create_admin
 
@@ -24,6 +26,8 @@ configure_logging(app)
 # Регистрация Blueprints
 app.register_blueprint(auth_bp)
 app.register_blueprint(main_bp)
+app.register_blueprint(datamatrix_bp)
+app.register_blueprint(calculator_bp)
 
 # Создание админки
 admin = create_admin(app)

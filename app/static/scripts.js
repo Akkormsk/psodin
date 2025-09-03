@@ -84,11 +84,11 @@ function confirmOrderId() {
         formData.append('materials', materials);
 
         // Логирование всех данных формы
-        for (let [key, value] of formData.entries()) {
-            console.log(key, value);
-        }
+        //        for (let [key, value] of formData.entries()) {
+        //            console.log(key, value);
+        //        }
 
-        fetch('/save_order', {
+        fetch('/calculator/save_order', {
             method: 'POST',
             body: formData
         }).then(response => {
@@ -111,7 +111,13 @@ function confirmOrderId() {
 
 function toggleManualInput() {
     const manualInputSection = document.getElementById('manualInputSection');
-    manualInputSection.style.display = manualInputSection.style.display === 'none' ? 'block' : 'none';
+    if (manualInputSection.classList.contains('d-none')) {
+        manualInputSection.classList.remove('d-none');
+        manualInputSection.classList.add('d-block');
+    } else {
+        manualInputSection.classList.remove('d-block');
+        manualInputSection.classList.add('d-none');
+    }
 }
 
 // Добавить введенный вручную материал
