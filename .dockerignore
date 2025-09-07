@@ -1,0 +1,11 @@
+.git
+.gitignore
+.idea
+__pycache__
+venv
+*.db
+*.log
+flask_session
+gs10051w64.exe
+*.pyc
+

@@ -35,3 +35,4 @@ mysql-connector-python
 pymysql
 requests==2.32.3
 pdf2image==1.17.0
+pylibdmtx
