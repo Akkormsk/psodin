@@ -8,6 +8,16 @@
             <label for="kiz_file">Загрузите файл PDF с КИЗами:</label>
             <input type="file" class="form-control-file" id="kiz_file" name="kiz_file" accept=".pdf" required>
         </div>
+        <div class="form-row align-items-end">
+            <div class="form-group col-md-4">
+                <label for="max_codes">Макс. кодов на странице (0 = без лимита)</label>
+                <input type="number" class="form-control" id="max_codes" name="max_codes" min="0" step="1" placeholder="напр. 4" value="4">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="target_height_cm">Высота наклейки, см</label>
+                <input type="number" class="form-control" id="target_height_cm" name="target_height_cm" min="1" step="0.1" placeholder="напр. 5" value="5">
+            </div>
+        </div>
         <button type="submit" class="btn btn-primary" id="processButton">Обработать</button>
     </form>
 
@@ -32,6 +42,8 @@
         const imageGrid = document.querySelector('.image-grid');
         const messageSection = document.getElementById('messageSection');
         const processButton = document.getElementById('processButton');
+        const maxCodesInput = document.getElementById('max_codes');
+        const targetHeightInput = document.getElementById('target_height_cm');
 
         // Функция для отображения сообщений
         function showMessage(message, type = 'info') {
@@ -64,6 +76,11 @@
 
             const formData = new FormData();
             formData.append('kiz_file', kizFileInput.files[0]);
+            // Доп. параметры
+            const mcVal = maxCodesInput && maxCodesInput.value !== '' ? parseInt(maxCodesInput.value, 10) : '';
+            const thVal = targetHeightInput && targetHeightInput.value !== '' ? parseFloat(targetHeightInput.value) : '';
+            formData.append('mc', mcVal);
+            formData.append('th', thVal);
 
             fetch("{{ url_for('datamatrix.datamatrix_index') }}", {
                 method: 'POST',
@@ -146,13 +163,14 @@
             downloadPdfBtn.addEventListener('click', function() {
                 const images = document.querySelectorAll('.image-grid img');
                 const base64Images = Array.from(images).map(img => img.src.split(',')[1]);
+                const thVal = targetHeightInput && targetHeightInput.value !== '' ? parseFloat(targetHeightInput.value) : 5;
 
                 fetch("{{ url_for('datamatrix.download_pdf') }}", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ images: base64Images })
+                    body: JSON.stringify({ images: base64Images, th: thVal })
                 })
                 .then(response => {
                     if (response.ok) {

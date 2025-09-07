@@ -22,11 +22,22 @@ def datamatrix_processing():
     if not file.filename.lower().endswith('.pdf'):
         return jsonify({'error': 'Invalid file type'}), 400
     try:
+        # Читаем параметры из формы
+        mc_param = request.form.get('mc', '').strip()
+        try:
+            mc_value = int(mc_param) if mc_param != '' else 0
+        except ValueError:
+            mc_value = 0
+
         pages = convert_from_bytes(file.read(), dpi=300, fmt='png')
         generated_images = []
         for page_num, img in enumerate(pages, start=1):
             width, height = img.size
-            results = dmtx_decode(img, max_count=4)
+            # Учитываем максимальное число кодов на странице, 0/отсутствует = без лимита
+            if mc_value and mc_value > 0:
+                results = dmtx_decode(img, max_count=mc_value)
+            else:
+                results = dmtx_decode(img)
             for r in results:
                 x, y, w, h = r.rect
                 pad = 20
@@ -55,7 +66,13 @@ def download_pdf():
     try:
         images = []
         dpi_needed = 300
-        target_height_cm = 5
+        # Читаем желаемую высоту из запроса, по умолчанию 5 см
+        try:
+            target_height_cm = float(data.get('th', 5))
+        except (TypeError, ValueError):
+            target_height_cm = 5
+        if target_height_cm <= 0:
+            target_height_cm = 5
         target_height_inch = target_height_cm / 2.54
         for enc in encoded_images:
             img_data = base64.b64decode(enc)
