@@ -1,4 +1,5 @@
 from flask import Flask, session, request, g
+import os
 from config import Config
 from flask_migrate import Migrate
 from flask_session import Session
@@ -18,6 +19,10 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 # Настройка сессий
+if app.config.get('SESSION_TYPE') == 'filesystem':
+    session_dir = app.config.get('SESSION_FILE_DIR')
+    if session_dir:
+        os.makedirs(session_dir, exist_ok=True)
 Session(app)
 
 # Настройка логирования

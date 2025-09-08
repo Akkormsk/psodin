@@ -1,6 +1,7 @@
 import logging
 from logging.handlers import RotatingFileHandler
 import sys # Добавляем импорт sys
+import os
 from flask import request, session
 from sqlalchemy import event
 from sqlalchemy.engine import Engine
@@ -10,13 +11,20 @@ def configure_logging(app):
     logger = logging.getLogger('app_logger')
     logger.setLevel(logging.DEBUG)
 
-    # Обработчик для записи в файл
-    file_handler = RotatingFileHandler('app.log', maxBytes=10000, backupCount=1)
-    formatter = logging.Formatter(
-        '%(asctime)s %(levelname)s: %(message)s'
-    )
-    file_handler.setFormatter(formatter)
-    logger.addHandler(file_handler)
+    formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s')
+
+    # Обработчик для записи в файл (в /tmp), с безопасным фолбэком
+    log_path = app.config.get('LOG_FILE', '/tmp/app.log')
+    try:
+        log_dir = os.path.dirname(log_path)
+        if log_dir:
+            os.makedirs(log_dir, exist_ok=True)
+        file_handler = RotatingFileHandler(log_path, maxBytes=1_000_000, backupCount=1)
+        file_handler.setFormatter(formatter)
+        logger.addHandler(file_handler)
+    except Exception:
+        # Если не удалось создать файл — пишем только в stdout
+        pass
 
     # Обработчик для вывода в консоль (stdout)
     console_handler = logging.StreamHandler(sys.stdout)
