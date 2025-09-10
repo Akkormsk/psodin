@@ -1,24 +1,354 @@
-2025-09-03 22:50:10,631 INFO: Пользователь перешел на страницу: /static/scripts.js, Метод: GET, ID сессии: Unknown
-2025-09-03 22:50:14,081 INFO: Пользователь перешел на страницу: /datamatrix/, Метод: POST, ID сессии: Unknown
-2025-09-03 22:55:01,449 INFO: Пользователь перешел на страницу: /, Метод: GET, ID сессии: Unknown
-2025-09-03 22:55:01,500 INFO: Пользователь перешел на страницу: /static/styles.css, Метод: GET, ID сессии: Unknown
-2025-09-03 22:55:01,506 INFO: Пользователь перешел на страницу: /static/calculator_2374367.png, Метод: GET, ID сессии: Unknown
-2025-09-03 22:55:01,509 INFO: Пользователь перешел на страницу: /static/cashier-machine_1063097.png, Метод: GET, ID сессии: Unknown
-2025-09-03 22:55:01,527 INFO: Пользователь перешел на страницу: /static/open-book_2876829.png, Метод: GET, ID сессии: Unknown
-2025-09-03 22:55:01,528 INFO: Пользователь перешел на страницу: /static/qr.png, Метод: GET, ID сессии: Unknown
-2025-09-03 22:55:01,533 INFO: Пользователь перешел на страницу: /static/scripts.js, Метод: GET, ID сессии: Unknown
-2025-09-03 22:55:04,300 INFO: Пользователь перешел на страницу: /datamatrix/, Метод: GET, ID сессии: Unknown
-2025-09-03 22:55:04,332 INFO: Пользователь перешел на страницу: /static/styles.css, Метод: GET, ID сессии: Unknown
-2025-09-03 22:55:04,333 INFO: Пользователь перешел на страницу: /static/scripts.js, Метод: GET, ID сессии: Unknown
-2025-09-03 22:55:07,677 INFO: Пользователь перешел на страницу: /datamatrix/, Метод: POST, ID сессии: Unknown
-2025-09-03 22:57:46,432 INFO: Пользователь перешел на страницу: /, Метод: GET, ID сессии: Unknown
-2025-09-03 22:57:46,484 INFO: Пользователь перешел на страницу: /static/styles.css, Метод: GET, ID сессии: Unknown
-2025-09-03 22:57:46,488 INFO: Пользователь перешел на страницу: /static/calculator_2374367.png, Метод: GET, ID сессии: Unknown
-2025-09-03 22:57:46,508 INFO: Пользователь перешел на страницу: /static/cashier-machine_1063097.png, Метод: GET, ID сессии: Unknown
-2025-09-03 22:57:46,510 INFO: Пользователь перешел на страницу: /static/open-book_2876829.png, Метод: GET, ID сессии: Unknown
-2025-09-03 22:57:46,511 INFO: Пользователь перешел на страницу: /static/qr.png, Метод: GET, ID сессии: Unknown
-2025-09-03 22:57:46,515 INFO: Пользователь перешел на страницу: /static/scripts.js, Метод: GET, ID сессии: Unknown
-2025-09-03 22:57:48,671 INFO: Пользователь перешел на страницу: /datamatrix/, Метод: GET, ID сессии: Unknown
-2025-09-03 22:57:48,698 INFO: Пользователь перешел на страницу: /static/styles.css, Метод: GET, ID сессии: Unknown
-2025-09-03 22:57:48,701 INFO: Пользователь перешел на страницу: /static/scripts.js, Метод: GET, ID сессии: Unknown
-2025-09-03 22:57:52,684 INFO: Пользователь перешел на страницу: /datamatrix/, Метод: POST, ID сессии: Unknown
+2025-09-10 10:00:36,977 INFO: Пользователь перешел на страницу: /, Метод: GET, ID сессии: Unknown
+2025-09-10 10:00:37,038 INFO: Пользователь перешел на страницу: /static/calculator_2374367.png, Метод: GET, ID сессии: Unknown
+2025-09-10 10:00:37,040 INFO: Пользователь перешел на страницу: /static/styles.css, Метод: GET, ID сессии: Unknown
+2025-09-10 10:00:37,042 INFO: Пользователь перешел на страницу: /static/cashier-machine_1063097.png, Метод: GET, ID сессии: Unknown
+2025-09-10 10:00:37,059 INFO: Пользователь перешел на страницу: /static/qr.png, Метод: GET, ID сессии: Unknown
+2025-09-10 10:00:37,059 INFO: Пользователь перешел на страницу: /static/open-book_2876829.png, Метод: GET, ID сессии: Unknown
+2025-09-10 10:00:37,070 INFO: Пользователь перешел на страницу: /static/scripts.js, Метод: GET, ID сессии: Unknown
+2025-09-10 10:00:39,096 INFO: Пользователь перешел на страницу: /calculator/, Метод: GET, ID сессии: Unknown
+2025-09-10 10:00:39,121 INFO: Выполнение SQL-запроса: SELECT paper_type.id AS paper_type_id, paper_type.name AS paper_type_name, paper_type.price_per_unit AS paper_type_price_per_unit 
+FROM paper_type, Параметры: ()
+2025-09-10 10:00:39,127 INFO: Выполнение SQL-запроса: SELECT print_type.id AS print_type_id, print_type.name AS print_type_name, print_type.price_per_unit_xerox AS print_type_price_per_unit_xerox, print_type.price_per_unit_konica AS print_type_price_per_unit_konica 
+FROM print_type, Параметры: ()
+2025-09-10 10:00:39,130 INFO: Выполнение SQL-запроса: SELECT post_print_processing.id AS post_print_processing_id, post_print_processing.name AS post_print_processing_name, post_print_processing.price_per_unit AS post_print_processing_price_per_unit 
+FROM post_print_processing, Параметры: ()
+2025-09-10 10:00:39,223 INFO: Пользователь перешел на страницу: /static/styles.css, Метод: GET, ID сессии: Unknown
+2025-09-10 10:00:39,230 INFO: Пользователь перешел на страницу: /static/scripts.js, Метод: GET, ID сессии: Unknown
+2025-09-10 10:02:51,007 INFO: Пользователь перешел на страницу: /calculator/, Метод: POST, ID сессии: Unknown
+2025-09-10 10:02:51,007 INFO: Выполнение SQL-запроса: SELECT paper_type.id AS paper_type_id, paper_type.name AS paper_type_name, paper_type.price_per_unit AS paper_type_price_per_unit 
+FROM paper_type 
+WHERE paper_type.id = ?, Параметры: ('12',)
+2025-09-10 10:02:51,015 INFO: Выполнение SQL-запроса: SELECT print_type.id AS print_type_id, print_type.name AS print_type_name, print_type.price_per_unit_xerox AS print_type_price_per_unit_xerox, print_type.price_per_unit_konica AS print_type_price_per_unit_konica 
+FROM print_type 
+WHERE print_type.id = ?, Параметры: ('1',)
+2025-09-10 10:02:51,015 INFO: Выполнение SQL-запроса: SELECT post_print_processing.id AS post_print_processing_id, post_print_processing.name AS post_print_processing_name, post_print_processing.price_per_unit AS post_print_processing_price_per_unit 
+FROM post_print_processing 
+WHERE post_print_processing.id = ?, Параметры: ('1',)
+2025-09-10 10:02:51,015 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (1,)
+2025-09-10 10:02:51,015 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (2,)
+2025-09-10 10:02:51,015 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (5,)
+2025-09-10 10:02:51,027 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (6,)
+2025-09-10 10:02:51,027 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (7,)
+2025-09-10 10:02:51,027 INFO: Выполнение SQL-запроса: SELECT paper_type.id AS paper_type_id, paper_type.name AS paper_type_name, paper_type.price_per_unit AS paper_type_price_per_unit 
+FROM paper_type, Параметры: ()
+2025-09-10 10:02:51,032 INFO: Выполнение SQL-запроса: SELECT print_type.id AS print_type_id, print_type.name AS print_type_name, print_type.price_per_unit_xerox AS print_type_price_per_unit_xerox, print_type.price_per_unit_konica AS print_type_price_per_unit_konica 
+FROM print_type, Параметры: ()
+2025-09-10 10:02:51,033 INFO: Выполнение SQL-запроса: SELECT post_print_processing.id AS post_print_processing_id, post_print_processing.name AS post_print_processing_name, post_print_processing.price_per_unit AS post_print_processing_price_per_unit 
+FROM post_print_processing, Параметры: ()
+2025-09-10 10:02:51,060 INFO: Пользователь перешел на страницу: /static/styles.css, Метод: GET, ID сессии: Unknown
+2025-09-10 10:02:51,062 INFO: Пользователь перешел на страницу: /static/scripts.js, Метод: GET, ID сессии: Unknown
+2025-09-10 10:04:30,118 INFO: Пользователь перешел на страницу: /calculator/wide_format_printing, Метод: GET, ID сессии: Unknown
+2025-09-10 10:04:30,120 INFO: Выполнение SQL-запроса: SELECT paper_type_large.id AS paper_type_large_id, paper_type_large.name AS paper_type_large_name, paper_type_large.price_per_unit AS paper_type_large_price_per_unit 
+FROM paper_type_large, Параметры: ()
+2025-09-10 10:04:30,123 INFO: Выполнение SQL-запроса: SELECT print_type_large.id AS print_type_large_id, print_type_large.name AS print_type_large_name, print_type_large.price_per_unit_canon AS print_type_large_price_per_unit_canon 
+FROM print_type_large, Параметры: ()
+2025-09-10 10:04:30,125 INFO: Выполнение SQL-запроса: SELECT post_print_processing_large.id AS post_print_processing_large_id, post_print_processing_large.name AS post_print_processing_large_name, post_print_processing_large.price_per_unit AS post_print_processing_large_price_per_unit 
+FROM post_print_processing_large, Параметры: ()
+2025-09-10 10:04:30,174 INFO: Пользователь перешел на страницу: /static/styles.css, Метод: GET, ID сессии: Unknown
+2025-09-10 10:04:30,175 INFO: Пользователь перешел на страницу: /static/scripts.js, Метод: GET, ID сессии: Unknown
+2025-09-10 10:04:37,267 INFO: Пользователь перешел на страницу: /calculator/, Метод: GET, ID сессии: Unknown
+2025-09-10 10:04:37,269 INFO: Выполнение SQL-запроса: SELECT paper_type.id AS paper_type_id, paper_type.name AS paper_type_name, paper_type.price_per_unit AS paper_type_price_per_unit 
+FROM paper_type, Параметры: ()
+2025-09-10 10:04:37,269 INFO: Выполнение SQL-запроса: SELECT print_type.id AS print_type_id, print_type.name AS print_type_name, print_type.price_per_unit_xerox AS print_type_price_per_unit_xerox, print_type.price_per_unit_konica AS print_type_price_per_unit_konica 
+FROM print_type, Параметры: ()
+2025-09-10 10:04:37,270 INFO: Выполнение SQL-запроса: SELECT post_print_processing.id AS post_print_processing_id, post_print_processing.name AS post_print_processing_name, post_print_processing.price_per_unit AS post_print_processing_price_per_unit 
+FROM post_print_processing, Параметры: ()
+2025-09-10 10:04:37,308 INFO: Пользователь перешел на страницу: /static/styles.css, Метод: GET, ID сессии: Unknown
+2025-09-10 10:04:37,313 INFO: Пользователь перешел на страницу: /static/scripts.js, Метод: GET, ID сессии: Unknown
+2025-09-10 10:08:37,326 INFO: Пользователь перешел на страницу: /calculator/, Метод: POST, ID сессии: Unknown
+2025-09-10 10:08:37,326 INFO: Выполнение SQL-запроса: SELECT paper_type.id AS paper_type_id, paper_type.name AS paper_type_name, paper_type.price_per_unit AS paper_type_price_per_unit 
+FROM paper_type 
+WHERE paper_type.id = ?, Параметры: ('1',)
+2025-09-10 10:08:37,326 INFO: Выполнение SQL-запроса: SELECT print_type.id AS print_type_id, print_type.name AS print_type_name, print_type.price_per_unit_xerox AS print_type_price_per_unit_xerox, print_type.price_per_unit_konica AS print_type_price_per_unit_konica 
+FROM print_type 
+WHERE print_type.id = ?, Параметры: ('1',)
+2025-09-10 10:08:37,335 INFO: Выполнение SQL-запроса: SELECT post_print_processing.id AS post_print_processing_id, post_print_processing.name AS post_print_processing_name, post_print_processing.price_per_unit AS post_print_processing_price_per_unit 
+FROM post_print_processing 
+WHERE post_print_processing.id = ?, Параметры: ('1',)
+2025-09-10 10:08:37,336 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (1,)
+2025-09-10 10:08:37,339 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (2,)
+2025-09-10 10:08:37,341 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (5,)
+2025-09-10 10:08:37,341 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (6,)
+2025-09-10 10:08:37,341 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (7,)
+2025-09-10 10:08:37,341 INFO: Выполнение SQL-запроса: SELECT paper_type.id AS paper_type_id, paper_type.name AS paper_type_name, paper_type.price_per_unit AS paper_type_price_per_unit 
+FROM paper_type, Параметры: ()
+2025-09-10 10:08:37,345 INFO: Выполнение SQL-запроса: SELECT print_type.id AS print_type_id, print_type.name AS print_type_name, print_type.price_per_unit_xerox AS print_type_price_per_unit_xerox, print_type.price_per_unit_konica AS print_type_price_per_unit_konica 
+FROM print_type, Параметры: ()
+2025-09-10 10:08:37,345 INFO: Выполнение SQL-запроса: SELECT post_print_processing.id AS post_print_processing_id, post_print_processing.name AS post_print_processing_name, post_print_processing.price_per_unit AS post_print_processing_price_per_unit 
+FROM post_print_processing, Параметры: ()
+2025-09-10 10:08:37,376 INFO: Пользователь перешел на страницу: /static/styles.css, Метод: GET, ID сессии: Unknown
+2025-09-10 10:08:37,377 INFO: Пользователь перешел на страницу: /static/scripts.js, Метод: GET, ID сессии: Unknown
+2025-09-10 10:24:14,272 INFO: Пользователь перешел на страницу: /, Метод: GET, ID сессии: Unknown
+2025-09-10 10:24:14,427 INFO: Пользователь перешел на страницу: /static/styles.css, Метод: GET, ID сессии: Unknown
+2025-09-10 10:24:14,433 INFO: Пользователь перешел на страницу: /static/calculator_2374367.png, Метод: GET, ID сессии: Unknown
+2025-09-10 10:24:14,437 INFO: Пользователь перешел на страницу: /static/cashier-machine_1063097.png, Метод: GET, ID сессии: Unknown
+2025-09-10 10:24:14,452 INFO: Пользователь перешел на страницу: /static/open-book_2876829.png, Метод: GET, ID сессии: Unknown
+2025-09-10 10:24:14,452 INFO: Пользователь перешел на страницу: /static/qr.png, Метод: GET, ID сессии: Unknown
+2025-09-10 10:24:14,456 INFO: Пользователь перешел на страницу: /static/scripts.js, Метод: GET, ID сессии: Unknown
+2025-09-10 10:24:16,368 INFO: Пользователь перешел на страницу: /calculator/, Метод: GET, ID сессии: Unknown
+2025-09-10 10:24:16,388 INFO: Выполнение SQL-запроса: SELECT paper_type.id AS paper_type_id, paper_type.name AS paper_type_name, paper_type.price_per_unit AS paper_type_price_per_unit 
+FROM paper_type, Параметры: ()
+2025-09-10 10:24:16,393 INFO: Выполнение SQL-запроса: SELECT print_type.id AS print_type_id, print_type.name AS print_type_name, print_type.price_per_unit_xerox AS print_type_price_per_unit_xerox, print_type.price_per_unit_konica AS print_type_price_per_unit_konica 
+FROM print_type, Параметры: ()
+2025-09-10 10:24:16,397 INFO: Выполнение SQL-запроса: SELECT post_print_processing.id AS post_print_processing_id, post_print_processing.name AS post_print_processing_name, post_print_processing.price_per_unit AS post_print_processing_price_per_unit 
+FROM post_print_processing, Параметры: ()
+2025-09-10 10:24:16,565 INFO: Пользователь перешел на страницу: /static/styles.css, Метод: GET, ID сессии: Unknown
+2025-09-10 10:24:16,566 INFO: Пользователь перешел на страницу: /static/scripts.js, Метод: GET, ID сессии: Unknown
+2025-09-10 10:24:24,005 INFO: Пользователь перешел на страницу: /calculator/, Метод: POST, ID сессии: Unknown
+2025-09-10 10:24:24,007 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (1,)
+2025-09-10 10:24:24,007 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (2,)
+2025-09-10 10:24:24,012 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (5,)
+2025-09-10 10:24:24,014 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (6,)
+2025-09-10 10:24:24,014 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (7,)
+2025-09-10 10:24:24,016 INFO: Выполнение SQL-запроса: SELECT paper_type.id AS paper_type_id, paper_type.name AS paper_type_name, paper_type.price_per_unit AS paper_type_price_per_unit 
+FROM paper_type, Параметры: ()
+2025-09-10 10:24:24,016 INFO: Выполнение SQL-запроса: SELECT print_type.id AS print_type_id, print_type.name AS print_type_name, print_type.price_per_unit_xerox AS print_type_price_per_unit_xerox, print_type.price_per_unit_konica AS print_type_price_per_unit_konica 
+FROM print_type, Параметры: ()
+2025-09-10 10:24:24,016 INFO: Выполнение SQL-запроса: SELECT post_print_processing.id AS post_print_processing_id, post_print_processing.name AS post_print_processing_name, post_print_processing.price_per_unit AS post_print_processing_price_per_unit 
+FROM post_print_processing, Параметры: ()
+2025-09-10 10:24:24,054 INFO: Пользователь перешел на страницу: /static/styles.css, Метод: GET, ID сессии: Unknown
+2025-09-10 10:24:24,055 INFO: Пользователь перешел на страницу: /static/scripts.js, Метод: GET, ID сессии: Unknown
+2025-09-10 10:24:50,211 INFO: Пользователь перешел на страницу: /calculator/, Метод: POST, ID сессии: Unknown
+2025-09-10 10:24:50,211 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (1,)
+2025-09-10 10:24:50,211 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (2,)
+2025-09-10 10:24:50,211 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (5,)
+2025-09-10 10:24:50,222 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (6,)
+2025-09-10 10:24:50,222 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (7,)
+2025-09-10 10:24:50,222 INFO: Выполнение SQL-запроса: SELECT paper_type.id AS paper_type_id, paper_type.name AS paper_type_name, paper_type.price_per_unit AS paper_type_price_per_unit 
+FROM paper_type, Параметры: ()
+2025-09-10 10:24:50,227 INFO: Выполнение SQL-запроса: SELECT print_type.id AS print_type_id, print_type.name AS print_type_name, print_type.price_per_unit_xerox AS print_type_price_per_unit_xerox, print_type.price_per_unit_konica AS print_type_price_per_unit_konica 
+FROM print_type, Параметры: ()
+2025-09-10 10:24:50,227 INFO: Выполнение SQL-запроса: SELECT post_print_processing.id AS post_print_processing_id, post_print_processing.name AS post_print_processing_name, post_print_processing.price_per_unit AS post_print_processing_price_per_unit 
+FROM post_print_processing, Параметры: ()
+2025-09-10 10:24:50,258 INFO: Пользователь перешел на страницу: /static/styles.css, Метод: GET, ID сессии: Unknown
+2025-09-10 10:24:50,262 INFO: Пользователь перешел на страницу: /static/scripts.js, Метод: GET, ID сессии: Unknown
+2025-09-10 10:25:04,894 INFO: Пользователь перешел на страницу: /calculator/, Метод: POST, ID сессии: Unknown
+2025-09-10 10:25:04,894 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (1,)
+2025-09-10 10:25:04,903 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (2,)
+2025-09-10 10:25:04,903 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (5,)
+2025-09-10 10:25:04,903 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (6,)
+2025-09-10 10:25:04,907 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (7,)
+2025-09-10 10:25:04,909 INFO: Выполнение SQL-запроса: SELECT paper_type.id AS paper_type_id, paper_type.name AS paper_type_name, paper_type.price_per_unit AS paper_type_price_per_unit 
+FROM paper_type, Параметры: ()
+2025-09-10 10:25:04,909 INFO: Выполнение SQL-запроса: SELECT print_type.id AS print_type_id, print_type.name AS print_type_name, print_type.price_per_unit_xerox AS print_type_price_per_unit_xerox, print_type.price_per_unit_konica AS print_type_price_per_unit_konica 
+FROM print_type, Параметры: ()
+2025-09-10 10:25:04,909 INFO: Выполнение SQL-запроса: SELECT post_print_processing.id AS post_print_processing_id, post_print_processing.name AS post_print_processing_name, post_print_processing.price_per_unit AS post_print_processing_price_per_unit 
+FROM post_print_processing, Параметры: ()
+2025-09-10 10:25:04,942 INFO: Пользователь перешел на страницу: /static/styles.css, Метод: GET, ID сессии: Unknown
+2025-09-10 10:25:04,946 INFO: Пользователь перешел на страницу: /static/scripts.js, Метод: GET, ID сессии: Unknown
+2025-09-10 10:25:20,948 INFO: Пользователь перешел на страницу: /calculator/, Метод: POST, ID сессии: Unknown
+2025-09-10 10:25:20,950 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (1,)
+2025-09-10 10:25:20,965 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (2,)
+2025-09-10 10:25:20,975 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (5,)
+2025-09-10 10:25:20,977 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (6,)
+2025-09-10 10:25:20,977 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (7,)
+2025-09-10 10:25:20,977 INFO: Выполнение SQL-запроса: SELECT paper_type.id AS paper_type_id, paper_type.name AS paper_type_name, paper_type.price_per_unit AS paper_type_price_per_unit 
+FROM paper_type, Параметры: ()
+2025-09-10 10:25:20,983 INFO: Выполнение SQL-запроса: SELECT print_type.id AS print_type_id, print_type.name AS print_type_name, print_type.price_per_unit_xerox AS print_type_price_per_unit_xerox, print_type.price_per_unit_konica AS print_type_price_per_unit_konica 
+FROM print_type, Параметры: ()
+2025-09-10 10:25:20,985 INFO: Выполнение SQL-запроса: SELECT post_print_processing.id AS post_print_processing_id, post_print_processing.name AS post_print_processing_name, post_print_processing.price_per_unit AS post_print_processing_price_per_unit 
+FROM post_print_processing, Параметры: ()
+2025-09-10 10:25:21,031 INFO: Пользователь перешел на страницу: /static/styles.css, Метод: GET, ID сессии: Unknown
+2025-09-10 10:25:21,054 INFO: Пользователь перешел на страницу: /static/scripts.js, Метод: GET, ID сессии: Unknown
+2025-09-10 10:25:56,603 INFO: Пользователь перешел на страницу: /calculator/, Метод: POST, ID сессии: Unknown
+2025-09-10 10:25:56,603 INFO: Выполнение SQL-запроса: SELECT paper_type.id AS paper_type_id, paper_type.name AS paper_type_name, paper_type.price_per_unit AS paper_type_price_per_unit 
+FROM paper_type 
+WHERE paper_type.id = ?, Параметры: ('9',)
+2025-09-10 10:25:56,603 INFO: Выполнение SQL-запроса: SELECT print_type.id AS print_type_id, print_type.name AS print_type_name, print_type.price_per_unit_xerox AS print_type_price_per_unit_xerox, print_type.price_per_unit_konica AS print_type_price_per_unit_konica 
+FROM print_type 
+WHERE print_type.id = ?, Параметры: ('1',)
+2025-09-10 10:25:56,603 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (1,)
+2025-09-10 10:25:56,616 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (2,)
+2025-09-10 10:25:56,619 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (5,)
+2025-09-10 10:25:56,619 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (6,)
+2025-09-10 10:25:56,619 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (7,)
+2025-09-10 10:25:56,619 INFO: Выполнение SQL-запроса: SELECT paper_type.id AS paper_type_id, paper_type.name AS paper_type_name, paper_type.price_per_unit AS paper_type_price_per_unit 
+FROM paper_type, Параметры: ()
+2025-09-10 10:25:56,619 INFO: Выполнение SQL-запроса: SELECT print_type.id AS print_type_id, print_type.name AS print_type_name, print_type.price_per_unit_xerox AS print_type_price_per_unit_xerox, print_type.price_per_unit_konica AS print_type_price_per_unit_konica 
+FROM print_type, Параметры: ()
+2025-09-10 10:25:56,627 INFO: Выполнение SQL-запроса: SELECT post_print_processing.id AS post_print_processing_id, post_print_processing.name AS post_print_processing_name, post_print_processing.price_per_unit AS post_print_processing_price_per_unit 
+FROM post_print_processing, Параметры: ()
+2025-09-10 10:25:56,659 INFO: Пользователь перешел на страницу: /static/styles.css, Метод: GET, ID сессии: Unknown
+2025-09-10 10:25:56,661 INFO: Пользователь перешел на страницу: /static/scripts.js, Метод: GET, ID сессии: Unknown
+2025-09-10 10:26:19,892 INFO: Пользователь перешел на страницу: /calculator/, Метод: POST, ID сессии: Unknown
+2025-09-10 10:26:19,892 INFO: Выполнение SQL-запроса: SELECT paper_type.id AS paper_type_id, paper_type.name AS paper_type_name, paper_type.price_per_unit AS paper_type_price_per_unit 
+FROM paper_type 
+WHERE paper_type.id = ?, Параметры: ('12',)
+2025-09-10 10:26:19,894 INFO: Выполнение SQL-запроса: SELECT print_type.id AS print_type_id, print_type.name AS print_type_name, print_type.price_per_unit_xerox AS print_type_price_per_unit_xerox, print_type.price_per_unit_konica AS print_type_price_per_unit_konica 
+FROM print_type 
+WHERE print_type.id = ?, Параметры: ('1',)
+2025-09-10 10:26:19,894 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (1,)
+2025-09-10 10:26:19,896 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (2,)
+2025-09-10 10:26:19,898 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (5,)
+2025-09-10 10:26:19,899 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (6,)
+2025-09-10 10:26:19,899 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (7,)
+2025-09-10 10:26:19,903 INFO: Выполнение SQL-запроса: SELECT paper_type.id AS paper_type_id, paper_type.name AS paper_type_name, paper_type.price_per_unit AS paper_type_price_per_unit 
+FROM paper_type, Параметры: ()
+2025-09-10 10:26:19,905 INFO: Выполнение SQL-запроса: SELECT print_type.id AS print_type_id, print_type.name AS print_type_name, print_type.price_per_unit_xerox AS print_type_price_per_unit_xerox, print_type.price_per_unit_konica AS print_type_price_per_unit_konica 
+FROM print_type, Параметры: ()
+2025-09-10 10:26:19,905 INFO: Выполнение SQL-запроса: SELECT post_print_processing.id AS post_print_processing_id, post_print_processing.name AS post_print_processing_name, post_print_processing.price_per_unit AS post_print_processing_price_per_unit 
+FROM post_print_processing, Параметры: ()
+2025-09-10 10:26:19,937 INFO: Пользователь перешел на страницу: /static/styles.css, Метод: GET, ID сессии: Unknown
+2025-09-10 10:26:19,938 INFO: Пользователь перешел на страницу: /static/scripts.js, Метод: GET, ID сессии: Unknown
+2025-09-10 10:26:52,737 INFO: Пользователь перешел на страницу: /calculator/, Метод: POST, ID сессии: Unknown
+2025-09-10 10:26:52,737 INFO: Выполнение SQL-запроса: SELECT paper_type.id AS paper_type_id, paper_type.name AS paper_type_name, paper_type.price_per_unit AS paper_type_price_per_unit 
+FROM paper_type 
+WHERE paper_type.id = ?, Параметры: ('15',)
+2025-09-10 10:26:52,737 INFO: Выполнение SQL-запроса: SELECT print_type.id AS print_type_id, print_type.name AS print_type_name, print_type.price_per_unit_xerox AS print_type_price_per_unit_xerox, print_type.price_per_unit_konica AS print_type_price_per_unit_konica 
+FROM print_type 
+WHERE print_type.id = ?, Параметры: ('1',)
+2025-09-10 10:26:52,743 INFO: Выполнение SQL-запроса: SELECT post_print_processing.id AS post_print_processing_id, post_print_processing.name AS post_print_processing_name, post_print_processing.price_per_unit AS post_print_processing_price_per_unit 
+FROM post_print_processing 
+WHERE post_print_processing.id = ?, Параметры: ('12',)
+2025-09-10 10:26:52,745 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (1,)
+2025-09-10 10:26:52,745 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (2,)
+2025-09-10 10:26:52,745 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (5,)
+2025-09-10 10:26:52,745 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (6,)
+2025-09-10 10:26:52,751 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (7,)
+2025-09-10 10:26:52,751 INFO: Выполнение SQL-запроса: SELECT paper_type.id AS paper_type_id, paper_type.name AS paper_type_name, paper_type.price_per_unit AS paper_type_price_per_unit 
+FROM paper_type, Параметры: ()
+2025-09-10 10:26:52,755 INFO: Выполнение SQL-запроса: SELECT print_type.id AS print_type_id, print_type.name AS print_type_name, print_type.price_per_unit_xerox AS print_type_price_per_unit_xerox, print_type.price_per_unit_konica AS print_type_price_per_unit_konica 
+FROM print_type, Параметры: ()
+2025-09-10 10:26:52,755 INFO: Выполнение SQL-запроса: SELECT post_print_processing.id AS post_print_processing_id, post_print_processing.name AS post_print_processing_name, post_print_processing.price_per_unit AS post_print_processing_price_per_unit 
+FROM post_print_processing, Параметры: ()
+2025-09-10 10:26:52,787 INFO: Пользователь перешел на страницу: /static/styles.css, Метод: GET, ID сессии: Unknown
+2025-09-10 10:26:52,794 INFO: Пользователь перешел на страницу: /static/scripts.js, Метод: GET, ID сессии: Unknown
+2025-09-10 10:29:04,994 INFO: Пользователь перешел на страницу: /calculator/, Метод: POST, ID сессии: Unknown
+2025-09-10 10:29:04,994 INFO: Выполнение SQL-запроса: SELECT paper_type.id AS paper_type_id, paper_type.name AS paper_type_name, paper_type.price_per_unit AS paper_type_price_per_unit 
+FROM paper_type 
+WHERE paper_type.id = ?, Параметры: ('12',)
+2025-09-10 10:29:05,006 INFO: Выполнение SQL-запроса: SELECT paper_type.id AS paper_type_id, paper_type.name AS paper_type_name, paper_type.price_per_unit AS paper_type_price_per_unit 
+FROM paper_type 
+WHERE paper_type.id = ?, Параметры: ('15',)
+2025-09-10 10:29:05,006 INFO: Выполнение SQL-запроса: SELECT print_type.id AS print_type_id, print_type.name AS print_type_name, print_type.price_per_unit_xerox AS print_type_price_per_unit_xerox, print_type.price_per_unit_konica AS print_type_price_per_unit_konica 
+FROM print_type 
+WHERE print_type.id = ?, Параметры: ('1',)
+2025-09-10 10:29:05,006 INFO: Выполнение SQL-запроса: SELECT post_print_processing.id AS post_print_processing_id, post_print_processing.name AS post_print_processing_name, post_print_processing.price_per_unit AS post_print_processing_price_per_unit 
+FROM post_print_processing 
+WHERE post_print_processing.id = ?, Параметры: ('12',)
+2025-09-10 10:29:05,011 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (1,)
+2025-09-10 10:29:05,011 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (2,)
+2025-09-10 10:29:05,011 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (5,)
+2025-09-10 10:29:05,015 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (6,)
+2025-09-10 10:29:05,016 INFO: Выполнение SQL-запроса: SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value 
+FROM variables 
+WHERE variables.id = ?, Параметры: (7,)
+2025-09-10 10:29:05,016 INFO: Выполнение SQL-запроса: SELECT paper_type.id AS paper_type_id, paper_type.name AS paper_type_name, paper_type.price_per_unit AS paper_type_price_per_unit 
+FROM paper_type, Параметры: ()
+2025-09-10 10:29:05,016 INFO: Выполнение SQL-запроса: SELECT print_type.id AS print_type_id, print_type.name AS print_type_name, print_type.price_per_unit_xerox AS print_type_price_per_unit_xerox, print_type.price_per_unit_konica AS print_type_price_per_unit_konica 
+FROM print_type, Параметры: ()
+2025-09-10 10:29:05,016 INFO: Выполнение SQL-запроса: SELECT post_print_processing.id AS post_print_processing_id, post_print_processing.name AS post_print_processing_name, post_print_processing.price_per_unit AS post_print_processing_price_per_unit 
+FROM post_print_processing, Параметры: ()
+2025-09-10 10:29:05,046 INFO: Пользователь перешел на страницу: /static/styles.css, Метод: GET, ID сессии: Unknown
+2025-09-10 10:29:05,047 INFO: Пользователь перешел на страницу: /static/scripts.js, Метод: GET, ID сессии: Unknown
+2025-09-10 10:31:07,249 INFO: Пользователь перешел на страницу: /calculator/save_order, Метод: POST, ID сессии: Unknown
+2025-09-10 10:31:07,249 INFO: Выполнение SQL-запроса: INSERT INTO "order" (id, retail_price, cost_price, materials) VALUES (?, ?, ?, ?), Параметры: ('1009', 14690.64, 7282.0, 'Бумага 1 - COLOR COPY SRA3 300 - 75 шт по цене 32.8\r\nБумага 2 - Ritrama (с/к)  SRA3 пг - 40 шт по цене 30.6\r\nПечать 1 - xerox - CMYK SRA3 - 115 шт по цене 17.2\r\nПостпечатка 1 - Плоттерная р. SRA3 тонк. - 40 шт по цене 3.0\r\nРабота - 3.0 ч. по цене 500.0\r\n')
+2025-09-10 10:31:07,263 INFO: Добавлена новая запись: Заказ ID: 1009, Розничная цена: 14690.64, Себестоимость: 7282.0, Материалы: Бумага 1 - COLOR COPY SRA3 300 - 75 шт по цене 32.8
+Бумага 2 - Ritrama (с/к)  SRA3 пг - 40 шт по цене 30.6
+Печать 1 - xerox - CMYK SRA3 - 115 шт по цене 17.2
+Постпечатка 1 - Плоттерная р. SRA3 тонк. - 40 шт по цене 3.0
+Работа - 3.0 ч. по цене 500.0
+
+2025-09-10 10:31:14,548 INFO: Пользователь перешел на страницу: /calculator/orders, Метод: GET, ID сессии: Unknown
+2025-09-10 10:31:14,549 INFO: Выполнение SQL-запроса: SELECT "order".id AS order_id, "order".retail_price AS order_retail_price, "order".cost_price AS order_cost_price, "order".materials AS order_materials 
+FROM "order", Параметры: ()
+2025-09-10 10:31:14,598 INFO: Пользователь перешел на страницу: /static/styles.css, Метод: GET, ID сессии: Unknown
+2025-09-10 10:31:14,601 INFO: Пользователь перешел на страницу: /static/scripts.js, Метод: GET, ID сессии: Unknown

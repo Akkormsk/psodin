@@ -1,12 +1,11 @@
-from flask_script import Manager
-from flask_migrate import Migrate, MigrateCommand
-from app import __init__, db
+from flask_migrate import Migrate
+from app import app
+from app.models import db
 
-migrate = Migrate(__init__, db)
-manager = Manager(__init__)
-
-# Добавление команды миграции в менеджер
-manager.add_command('db', MigrateCommand)
+# Инициализация миграций для текущего приложения
+migrate = Migrate(app, db)
 
 if __name__ == '__main__':
-    manager.run()
+    # Запуск не нужен: миграции вызываются через flask CLI
+    # Оставляем заглушку для совместимости
+    print('Use: set FLASK_APP=app && flask db upgrade')

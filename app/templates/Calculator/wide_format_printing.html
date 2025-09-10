@@ -22,12 +22,13 @@
         {% else %}
         <div class="form-group d-flex">
             <select class="form-control" name="paper_type" style="flex: 1;">
+                <option value="" selected>Не выбрано</option>
                 {% for paper in papers %}
                 <option value="{{ paper.id }}">{{ paper.name }} - {{ paper.price_per_unit }} руб/м²</option>
                 {% endfor %}
             </select>
             <input type="number" class="form-control" name="paper_quantity" placeholder="Количество"
-                   style="width: 15%;" required>
+                   style="width: 15%;">
             <button type="button" class="calc-btn btn btn-light" onclick="addPaperSection()">+</button>
         </div>
         {% endfor %}
@@ -51,12 +52,13 @@
         {% else %}
         <div class="form-group d-flex">
             <select class="form-control" name="print_type" style="flex: 1;">
+                <option value="" selected>Не выбрано</option>
                 {% for print in print_types %}
                 <option value="{{ print.id }}">{{ print.name }} - {{ print.price_per_unit_canon }} руб/м²</option>
                 {% endfor %}
             </select>
             <input type="number" class="form-control" name="print_quantity" placeholder="Количество"
-                   style="width: 15%;" required>
+                   style="width: 15%;">
             <button type="button" class="calc-btn btn btn-light" onclick="addPrintSection()">+</button>
         </div>
         {% endfor %}
@@ -80,12 +82,13 @@
         {% else %}
         <div class="form-group d-flex">
             <select class="form-control" name="post_processing" style="flex: 1;">
+                <option value="" selected>Не выбрано</option>
                 {% for process in post_processings %}
                 <option value="{{ process.id }}">{{ process.name }} - {{ process.price_per_unit }} руб/шт</option>
                 {% endfor %}
             </select>
             <input type="number" class="form-control" name="postprint_quantity" placeholder="Количество"
-                   style="width: 15%;" required>
+                   style="width: 15%;">
             <button type="button" class="calc-btn btn btn-light" onclick="addPostprintSection()">+</button>
         </div>
         {% endfor %}
@@ -109,12 +112,12 @@
 <template id="paper-section-template">
     <div class="form-group d-flex">
         <select class="form-control" name="paper_type" style="flex: 1;">
+            <option value="" selected>Не выбрано</option>
             {% for paper in papers %}
             <option value="{{ paper.id }}">{{ paper.name }} - {{ paper.price_per_unit }} руб/м²</option>
             {% endfor %}
         </select>
-        <input type="number" class="form-control" name="paper_quantity" placeholder="Количество" style="width: 15%;"
-               required>
+        <input type="number" class="form-control" name="paper_quantity" placeholder="Количество" style="width: 15%;">
         <button type="button" class="calc-btn btn btn-light" onclick="removeSection(this)">-</button>
     </div>
 </template>
@@ -122,12 +125,12 @@
 <template id="print-section-template">
     <div class="form-group d-flex">
         <select class="form-control" name="print_type" style="flex: 1;">
+            <option value="" selected>Не выбрано</option>
             {% for print in print_types %}
             <option value="{{ print.id }}">{{ print.name }} - {{ print.price_per_unit_canon }} руб/м²</option>
             {% endfor %}
         </select>
-        <input type="number" class="form-control" name="print_quantity" placeholder="Количество" style="width: 15%;"
-               required>
+        <input type="number" class="form-control" name="print_quantity" placeholder="Количество" style="width: 15%;">
         <button type="button" class="calc-btn btn btn-light" onclick="removeSection(this)">-</button>
     </div>
 </template>
@@ -135,12 +138,12 @@
 <template id="postprint-section-template">
     <div class="form-group d-flex">
         <select class="form-control" name="post_processing" style="flex: 1;">
+            <option value="" selected>Не выбрано</option>
             {% for process in post_processings %}
             <option value="{{ process.id }}">{{ process.name }} - {{ process.price_per_unit }} руб/шт</option>
             {% endfor %}
         </select>
-        <input type="number" class="form-control" name="postprint_quantity" placeholder="Количество" style="width: 15%;"
-               required>
+        <input type="number" class="form-control" name="postprint_quantity" placeholder="Количество" style="width: 15%;">
         <button type="button" class="calc-btn btn btn-light" onclick="removeSection(this)">-</button>
     </div>
 </template>

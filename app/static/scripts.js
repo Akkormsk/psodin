@@ -13,12 +13,22 @@ function updatePrintOptions(machineType, element) {
     const parentDiv = element.closest('.form-group');
     const printSelect = parentDiv.querySelector('select[name="print_type"]');
 
+    // Если тип машины не выбран, ничего не меняем в отображении цен
+    if (!machineType) {
+        return;
+    }
+
     // Обновление цен в зависимости от выбранной машины
     printSelect.querySelectorAll('option').forEach(function(option) {
+        // Пропускаем плейсхолдеры без цен
+        if (!option.hasAttribute('data-xerox') && !option.hasAttribute('data-konica')) {
+            return;
+        }
         const xeroxPrice = option.getAttribute('data-xerox');
         const konicaPrice = option.getAttribute('data-konica');
         const price = machineType === 'xerox' ? xeroxPrice : konicaPrice;
-        option.textContent = `${option.textContent.split('-')[0].trim()} - ${price} руб/лист`;
+        const baseName = option.textContent.split('-')[0].trim();
+        option.textContent = `${baseName} - ${price} руб/лист`;
     });
 }
 

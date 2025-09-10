@@ -29,6 +29,7 @@ def sheet_printing_func():
             postprint_types = request.form.getlist('postprint_type')
             postprint_quantities = request.form.getlist('postprint_quantity')
             work_time = float(request.form['work_time'])
+            final_units = request.form.get('final_units')
 
             materials_text = ""
 
@@ -36,8 +37,13 @@ def sheet_printing_func():
             paper_cost = 0
             total_paper = 0
             for i in range(len(paper_type_ids)):
+                if not paper_type_ids[i]:
+                    continue
+                quantity_str = (paper_quantities[i] or '').strip()
+                if not quantity_str:
+                    continue
                 paper = PaperType.query.get(paper_type_ids[i])
-                quantity = int(paper_quantities[i])
+                quantity = int(quantity_str)
                 paper_cost += quantity * paper.price_per_unit
                 total_paper += quantity
                 paper_details.append((paper, quantity))
@@ -46,9 +52,14 @@ def sheet_printing_func():
             print_details = []
             print_cost = 0
             for i in range(len(machine_types)):
+                if not machine_types[i] or not print_type_ids[i]:
+                    continue
+                quantity_str = (print_quantities[i] or '').strip()
+                if not quantity_str:
+                    continue
                 machine_type = machine_types[i]
                 print_type = PrintType.query.get(print_type_ids[i])
-                quantity = int(print_quantities[i])
+                quantity = int(quantity_str)
                 if machine_type == 'xerox':
                     print_cost += quantity * print_type.price_per_unit_xerox
                     materials_text += f"Печать {i + 1} - {machine_type} - {print_type.name} - {quantity} шт по цене {print_type.price_per_unit_xerox}\r\n"
@@ -60,8 +71,13 @@ def sheet_printing_func():
             postprint_details = []
             postprint_cost = 0
             for i in range(len(postprint_types)):
+                if not postprint_types[i]:
+                    continue
+                quantity_str = (postprint_quantities[i] or '').strip()
+                if not quantity_str:
+                    continue
                 postprint_type = PostPrintProcessing.query.get(postprint_types[i])
-                quantity = int(postprint_quantities[i])
+                quantity = int(quantity_str)
                 postprint_cost += quantity * postprint_type.price_per_unit
                 postprint_details.append((postprint_type, quantity))
                 materials_text += f"Постпечатка {i + 1} - {postprint_type.name} - {quantity} шт по цене {postprint_type.price_per_unit}\r\n"
@@ -86,10 +102,21 @@ def sheet_printing_func():
                 total_cost += manual_material_cost
                 materials_text += f"Свободный материал: {manual_material_name} - {manual_material_quantity} шт по цене {manual_material_price} руб/шт\r\n"
 
-            retail_price = round(total_cost * margin_ratio.value * (1 + (1 / total_paper)), 2)
+            # Защита от деления на ноль при отсутствии бумаги
+            retail_price = round(total_cost * margin_ratio.value * (1 + (1 / total_paper if total_paper else 1)), 2)
             regulars_price = round(retail_price * regulars_discount.value, 2)
             partners_price = round(retail_price * partners_discount.value, 2)
             urgent_price = round(retail_price * urgency.value, 2)
+
+            # Расчет цены за единицу, если введено корректное целое количество конечных изделий
+            price_per_unit = None
+            try:
+                if final_units:
+                    units = int(final_units)
+                    if units > 0:
+                        price_per_unit = round(retail_price / units, 2)
+            except Exception:
+                price_per_unit = None
 
             return render_template('Calculator/sheet_printing.html', total_cost=total_cost,
                                    paper_details=paper_details, print_details=print_details,
@@ -99,7 +126,8 @@ def sheet_printing_func():
                                    postprint_types=PostPrintProcessing.query.all(), work_cost=work_cost,
                                    print_cost=print_cost, retail_price=retail_price,
                                    regulars_price=regulars_price, partners_price=partners_price,
-                                   urgent_price=urgent_price, machine_type=machine_types[0],
+                                   urgent_price=urgent_price, machine_type=(machine_types[0] if machine_types else ''),
+                                   final_units=final_units, price_per_unit=price_per_unit,
                                    manual_material_name=manual_material_name,
                                    manual_material_price=manual_material_price,
                                    manual_material_quantity=manual_material_quantity,
@@ -184,15 +212,35 @@ def calculate_wide_format():
         paper_quantities = request.form.getlist('paper_quantity')
         print_quantities = request.form.getlist('print_quantity')
         process_quantities = request.form.getlist('postprint_quantity')
-        hours = int(request.form.get('hours', 0))
+        hours = int(request.form.get('hours', 0) or 0)
         materials_text = ""
 
-        paper_details = [(PaperTypeLarge.query.get(paper_id), int(paper_quantity)) for paper_id, paper_quantity in
-                         zip(paper_ids, paper_quantities)]
-        print_details = [(PrintTypeLarge.query.get(print_id), int(print_quantity)) for print_id, print_quantity in
-                         zip(print_ids, print_quantities)]
-        postprint_details = [(PostPrintProcessingLarge.query.get(process_id), int(process_quantity)) for
-                             process_id, process_quantity in zip(process_ids, process_quantities)]
+        paper_details = []
+        for paper_id, paper_quantity in zip(paper_ids, paper_quantities):
+            if not paper_id:
+                continue
+            qty_str = (paper_quantity or '').strip()
+            if not qty_str:
+                continue
+            paper_details.append((PaperTypeLarge.query.get(paper_id), int(qty_str)))
+
+        print_details = []
+        for print_id, print_quantity in zip(print_ids, print_quantities):
+            if not print_id:
+                continue
+            qty_str = (print_quantity or '').strip()
+            if not qty_str:
+                continue
+            print_details.append((PrintTypeLarge.query.get(print_id), int(qty_str)))
+
+        postprint_details = []
+        for process_id, process_quantity in zip(process_ids, process_quantities):
+            if not process_id:
+                continue
+            qty_str = (process_quantity or '').strip()
+            if not qty_str:
+                continue
+            postprint_details.append((PostPrintProcessingLarge.query.get(process_id), int(qty_str)))
 
         for i, (paper, quantity) in enumerate(paper_details):
             materials_text += f"Бумага {i + 1} - {paper.name} - {quantity} м² по цене {paper.price_per_unit}\r\n"
